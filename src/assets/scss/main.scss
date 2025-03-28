@@ -1,0 +1,267 @@
+@import 'variables';
+
+// Colors
+$primary: #1976d2; // Example primary color (blue)
+$dark: #121212;    // Example dark color
+$gray: #9e9e9e;    // Example gray color
+
+// Base styles
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: $font-family-sans-serif;
+  line-height: $line-height-base;
+  color: $dark;
+  background-color: #f8f9fa;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: $primary;
+  text-decoration: none;
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: darken($primary, 10%);
+    text-decoration: underline;
+  }
+
+  &:focus-visible {
+    outline: 2px dashed $primary;
+    outline-offset: 2px;
+  }
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+// Typography
+h1, h2, h3, h4, h5, h6 {
+  margin-bottom: 1rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+h1 { font-size: 2.5rem; }
+h2 { font-size: 2rem; }
+h3 { font-size: 1.75rem; }
+h4 { font-size: 1.5rem; }
+h5 { font-size: 1.25rem; }
+h6 { font-size: 1rem; }
+
+p {
+  margin-bottom: 1rem;
+}
+
+// Buttons
+.btn {
+  display: inline-block;
+  font-weight: 400;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  user-select: none;
+  border: $border-width solid transparent;
+  padding: 0.5rem 1rem;
+  font-size: $font-size-base;
+  line-height: $line-height-base;
+  border-radius: $border-radius;
+  transition: $transition-base;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px dashed $primary;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 0.2rem rgba($primary, 0.25);
+  }
+
+  &-primary {
+    color: white;
+    background-color: $primary;
+    border-color: $primary;
+
+    &:hover {
+      background-color: darken($primary, 10%);
+      border-color: darken($primary, 10%);
+    }
+  }
+
+  &-secondary {
+    color: white;
+    background-color: $secondary;
+    border-color: $secondary;
+
+    &:hover {
+      background-color: darken($secondary, 10%);
+      border-color: darken($secondary, 10%);
+    }
+  }
+
+  &-outline {
+    color: $primary;
+    background-color: transparent;
+    border-color: $primary;
+
+    &:hover {
+      color: white;
+      background-color: $primary;
+      border-color: $primary;
+    }
+  }
+
+  &-text {
+    color: $primary;
+    background-color: transparent;
+    border: none;
+    padding: 0;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &-icon {
+    background: none;
+    border: none;
+    color: $gray;
+    cursor: pointer;
+    padding: 0.5rem;
+
+    &:hover {
+      color: $primary;
+    }
+  }
+}
+
+// Utility classes
+.container {
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+
+  @media (min-width: $breakpoint-sm) {
+    max-width: 540px;
+  }
+
+  @media (min-width: $breakpoint-md) {
+    max-width: 720px;
+  }
+
+  @media (min-width: $breakpoint-lg) {
+    max-width: 960px;
+  }
+
+  @media (min-width: $breakpoint-xl) {
+    max-width: 1140px;
+  }
+}
+
+.text-center {
+  text-align: center;
+}
+
+.mt-1 { margin-top: map-get($spacers, 1); }
+.mt-2 { margin-top: map-get($spacers, 2); }
+.mt-3 { margin-top: map-get($spacers, 3); }
+.mt-4 { margin-top: map-get($spacers, 4); }
+.mt-5 { margin-top: map-get($spacers, 5); }
+
+.mb-1 { margin-bottom: map-get($spacers, 1); }
+.mb-2 { margin-bottom: map-get($spacers, 2); }
+.mb-3 { margin-bottom: map-get($spacers, 3); }
+.mb-4 { margin-bottom: map-get($spacers, 4); }
+.mb-5 { margin-bottom: map-get($spacers, 5); }
+
+// Animations
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.spinner {
+  display: inline-block;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 0.25em solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+  vertical-align: -0.125em;
+}
+
+// Responsive helpers
+.hidden-xs {
+  @media (max-width: $breakpoint-sm - 1) {
+    display: none !important;
+  }
+}
+
+.hidden-sm {
+  @media (min-width: $breakpoint-sm) and (max-width: $breakpoint-md - 1) {
+    display: none !important;
+  }
+}
+
+.hidden-md {
+  @media (min-width: $breakpoint-md) and (max-width: $breakpoint-lg - 1) {      
+    display: none !important;
+  }
+}
+
+.hidden-lg {
+  @media (min-width: $breakpoint-lg) and (max-width: $breakpoint-xl - 1) {
+    display: none !important;
+  }
+}
+
+.hidden-xl {
+  @media (min-width: $breakpoint-xl) {
+    display: none !important;
+  }
+}
+
+.visible-xs {
+  @media (min-width: $breakpoint-sm) {
+    display: none !important;
+  }
+}
+
+.visible-sm {
+  @media (max-width: $breakpoint-sm - 1), (min-width: $breakpoint-md) {
+    display: none !important;
+  }
+}
+
+.visible-md {
+  @media (max-width: $breakpoint-md - 1), (min-width: $breakpoint-lg) {
+    display: none !important;
+  }
+}
+
+.visible-lg {
+  @media (max-width: $breakpoint-lg - 1), (min-width: $breakpoint-xl) {
+    display: none !important;
+  }
+}
+
+.visible-xl {
+  @media (max-width: $breakpoint-xl - 1) {
+    display: none !important;
+  }
+}
