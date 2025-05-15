@@ -40,9 +40,6 @@ We welcome contributions! Please follow these steps:
 LiftUp is open-source under the **MIT License**.
 
 ## Connect With Us
-- **Website:** [Your Website Here]
-- **TikTok:** [@LiftUpOfficial]
-- **Email:** [contact@liftup.com]
 
 ---
 **LiftUp | Transcend Limitations, Elevate Minds** 🚀
