@@ -5,12 +5,13 @@
         <div class="footer-section brand-section">
           <div class="logo-container">
             <svg class="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 2L4 7V17L12 22L20 17V7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-              <path d="M12 22V12" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-              <path d="M20 7L12 12" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-              <path d="M12 12L4 7" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-            </svg>
-            <h3>LiftUp</h3>
+  <path d="M12 2L4 7V17L12 22L20 17V7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" fill="none"/>
+  <path d="M12 2V12" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M12 12L20 7" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M12 12L4 7" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M12 12L12 22" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+</svg>
+            <h3>LIFTUP</h3>
           </div>
           <p class="brand-description">A community-driven platform for mental health support and resources.</p>
           <div class="social-links">
@@ -47,8 +48,6 @@
             <li><router-link to="/resources">Mental Health Resources</router-link></li>
             <li><router-link to="/self-care">Self-Care Tools</router-link></li>
             <li><router-link to="/forum">Community Forum</router-link></li>
-            <li><router-link to="/therapy">Find a Therapist</router-link></li>
-            <li><router-link to="/about">About Our Mission</router-link></li>
           </ul>
         </div>
         
@@ -73,25 +72,29 @@
                 <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 <circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
-              <span>123 Wellness St, Mindful City</span>
+              <span>123 Wellness St, Manila City</span>
             </li>
           </ul>
         </div>
-        
-        <div class="footer-section newsletter-section">
-          <h4 class="section-title">Stay Updated</h4>
-          <p class="newsletter-text">Subscribe to our newsletter for mental health tips and updates.</p>
-          <form class="newsletter-form">
-            <input type="email" placeholder="Your email address" required>
-            <button type="submit" class="subscribe-btn">
-              <span>Subscribe</span>
-              <svg viewBox="0 0 24 24" fill="none">
-                <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </button>
-          </form>
+        <div class="footer-section support-section">
+  <h4 class="section-title">Support Us</h4>
+  <p class="support-text">Help us continue our mission to provide mental health resources to everyone.</p>
+  <div class="github-links">
+    <a href="https://github.com/codewithryry" target="_blank" rel="noopener noreferrer" class="github-link">
+      <svg class="github-icon" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+      </svg>
+      <span>Creator</span>
+    </a>
+    <a href="https://github.com/codewithryry/LiftUp.git" target="_blank" rel="noopener noreferrer" class="github-link repo-link">
+      <svg class="github-icon" viewBox="0 0 24 24" fill="currentColor">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.09.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.464-1.11-1.464-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.252-4.555-1.112-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.564 9.564 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.307.678.915.678 1.846 0 1.334-.012 2.41-.012 2.737 0 .267.18.577.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/>
+      </svg>
+      <span>Repository</span>
+    </a>
+  </div>
+  </div>
         </div>
-      </div>
       
       <div class="footer-bottom">
         <p class="copyright">&copy; 2025 LiftUp. All rights reserved.</p>
@@ -99,7 +102,6 @@
           <router-link to="/privacy">Privacy Policy</router-link>
           <router-link to="/terms">Terms of Service</router-link>
           <router-link to="/cookies">Cookie Policy</router-link>
-          <router-link to="/accessibility">Accessibility</router-link>
         </div>
       </div>
     </div>
@@ -131,18 +133,67 @@ export default {
   z-index: 1;
 }
 
+
+.github-links {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 20px;
+  
+  .github-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #666;
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    padding: 8px 12px;
+    border-radius: 6px;
+    background: rgba(0, 0, 0, 0.03);
+    
+    &:hover {
+      color: #333;
+      background: rgba(0, 0, 0, 0.08);
+      transform: translateY(-2px);
+      
+      .github-icon {
+        color: #333;
+      }
+    }
+    
+    .github-icon {
+      width: 18px;
+      height: 18px;
+    }
+  }
+  
+  .repo-link {
+    background: rgba(124, 58, 237, 0.05);
+    
+    &:hover {
+      background: rgba(124, 58, 237, 0.1);
+      
+      .github-icon {
+        color: #7C3AED;
+      }
+    }
+  }
+}
 .footer-content {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 40px;
   margin-bottom: 50px;
   
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr 1fr;
+  @media (max-width: 900px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
   }
   
-  @media (max-width: 480px) {
+  @media (max-width: 600px) {
     grid-template-columns: 1fr;
+    gap: 40px;
   }
 }
 
@@ -175,6 +226,7 @@ export default {
       color: #666;
       line-height: 1.6;
       margin-bottom: 25px;
+      font-size: 0.95rem;
     }
     
     .social-links {
@@ -222,6 +274,7 @@ export default {
           display: inline-block;
           position: relative;
           padding-left: 0;
+          font-size: 0.95rem;
           
           &::before {
             content: '';
@@ -259,6 +312,7 @@ export default {
         margin-bottom: 16px;
         color: #666;
         transition: all 0.3s ease;
+        font-size: 0.95rem;
         
         &:hover {
           color: #7C3AED;
@@ -283,60 +337,53 @@ export default {
     }
   }
   
-  &.newsletter-section {
-    .newsletter-text {
+  &.support-section {
+    .support-text {
       color: #666;
       margin-bottom: 20px;
       line-height: 1.6;
+      font-size: 0.95rem;
     }
     
-    .newsletter-form {
+    .support-options {
       display: flex;
       flex-direction: column;
+      gap: 12px;
       
-      input {
-        padding: 12px 16px;
-        border-radius: 6px;
-        border: 1px solid #ddd;
-        background: white;
-        color: #333;
-        margin-bottom: 12px;
-        font-size: 0.9rem;
-        transition: all 0.3s ease;
-        
-        &::placeholder {
-          color: #999;
-        }
-        
-        &:focus {
-          outline: none;
-          border-color: #7C3AED;
-          box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2);
-        }
-      }
-      
-      .subscribe-btn {
+      .support-btn {
         display: flex;
         align-items: center;
-        justify-content: center;
-        gap: 8px;
-        padding: 12px 20px;
-        background: linear-gradient(135deg, #7C3AED 0%, #5B21B6 100%);
-        color: white;
-        border: none;
+        gap: 10px;
+        padding: 12px 16px;
         border-radius: 6px;
-        font-weight: 600;
-        cursor: pointer;
+        font-weight: 500;
+        text-decoration: none;
         transition: all 0.3s ease;
-        
-        &:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
-        }
+        font-size: 0.95rem;
         
         svg {
-          width: 16px;
-          height: 16px;
+          width: 18px;
+          height: 18px;
+        }
+        
+        &.donate-btn {
+          background-color: rgba(124, 58, 237, 0.1);
+          color: #7C3AED;
+          
+          &:hover {
+            background-color: rgba(124, 58, 237, 0.2);
+            transform: translateY(-2px);
+          }
+        }
+        
+        &.volunteer-btn {
+          background-color: rgba(16, 185, 129, 0.1);
+          color: #10B981;
+          
+          &:hover {
+            background-color: rgba(16, 185, 129, 0.2);
+            transform: translateY(-2px);
+          }
         }
       }
     }
@@ -386,9 +433,10 @@ export default {
     display: flex;
     gap: 20px;
     
-    @media (max-width: 480px) {
-      flex-direction: column;
-      gap: 8px;
+    @media (max-width: 600px) {
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
     }
     
     a {
@@ -396,6 +444,7 @@ export default {
       text-decoration: none;
       font-size: 0.85rem;
       transition: all 0.3s ease;
+      white-space: nowrap;
       
       &:hover {
         color: #7C3AED;

@@ -1,49 +1,69 @@
 <template>
   <div class="profile-container">
+    <!-- Loading State -->
     <div v-if="loading" class="loading-overlay">
-      <div class="spinner"></div>
+      <div class="spinner" aria-label="Loading profile"></div>
     </div>
 
+    <!-- Profile Content -->
     <div v-else class="profile-content-wrapper">
-      <div class="profile-header">
-        <div class="avatar-container" @click="triggerFileInput">
+      <!-- Profile Header -->
+      <header class="profile-header">
+        <div class="avatar-container">
           <input 
             type="file" 
             ref="fileInput" 
             @change="handleFileChange" 
             accept="image/*"
-            style="display: none"
+            class="visually-hidden"
+            id="avatar-upload"
           >
-          <img :src="userPhotoUrl" alt="Profile" class="avatar">
-          <div class="upload-overlay">
-            <i class="fas fa-camera"></i>
-          </div>
+          <label for="avatar-upload" class="avatar-wrapper">
+            <img 
+              :src="userPhotoUrl" 
+              :alt="`Profile picture of ${user.displayName || user.username}`" 
+              class="avatar"
+              @error="handleImageError"
+            >
+            <span class="upload-overlay">
+              <i class="fas fa-camera" aria-hidden="true"></i>
+              <span class="visually-hidden">Change profile photo</span>
+            </span>
+          </label>
         </div>
+        
         <div class="user-info">
           <h1>{{ user.displayName || user.name || user.username }}</h1>
           <p class="user-email">{{ user.email }}</p>
           <p class="join-date">Member since {{ formattedJoinDate }}</p>
-          <button v-if="user.avatar && !isUsingProviderPhoto" @click="removePhoto" class="btn-remove-photo">
-            <i class="fas fa-trash-alt"></i> Remove Photo
+          <button 
+            v-if="user.avatar && !isUsingProviderPhoto" 
+            @click="removePhoto" 
+            class="btn-remove-photo"
+            aria-label="Remove profile photo"
+          >
+            <i class="fas fa-trash-alt" aria-hidden="true"></i> Remove Photo
           </button>
         </div>
-      </div>
+      </header>
       
+      <!-- Profile Body -->
       <div class="profile-body">
-        <div class="profile-sidebar">
-          <div class="sidebar-section">
-            <h3>About</h3>
+        <!-- Sidebar -->
+        <aside class="profile-sidebar">
+          <section class="sidebar-section">
+            <h2>About</h2>
             <p v-if="user.bio" class="bio-text">{{ user.bio }}</p>
             <p v-else class="empty-bio">No bio yet</p>
             <button @click="editBio" class="btn-edit">
-              <i class="fas fa-edit"></i> Edit Bio
+              <i class="fas fa-edit" aria-hidden="true"></i> Edit Bio
             </button>
-          </div>
+          </section>
           
-          <div class="sidebar-section stats-section">
-            <h3>Stats</h3>
+          <section class="sidebar-section stats-section">
+            <h2>Stats</h2>
             <div class="stat-item">
-              <div class="stat-icon">
+              <div class="stat-icon" aria-hidden="true">
                 <i class="fas fa-comment-alt"></i>
               </div>
               <div class="stat-info">
@@ -52,7 +72,7 @@
               </div>
             </div>
             <div class="stat-item">
-              <div class="stat-icon">
+              <div class="stat-icon" aria-hidden="true">
                 <i class="fas fa-comments"></i>
               </div>
               <div class="stat-info">
@@ -61,7 +81,7 @@
               </div>
             </div>
             <div class="stat-item">
-              <div class="stat-icon">
+              <div class="stat-icon" aria-hidden="true">
                 <i class="fas fa-bookmark"></i>
               </div>
               <div class="stat-info">
@@ -69,39 +89,58 @@
                 <span class="stat-label">Saved Resources</span>
               </div>
             </div>
-          </div>
-        </div>
+          </section>
+        </aside>
         
-        <div class="profile-main">
-          <div class="tabs">
+        <!-- Main Content -->
+        <main class="profile-main">
+          <div class="tabs" role="tablist">
             <button 
               v-for="tab in tabs" 
               :key="tab.id"
               @click="activeTab = tab.id"
               :class="{ active: activeTab === tab.id }"
               class="tab-button"
+              :aria-selected="activeTab === tab.id"
+              :aria-controls="`tab-${tab.id}`"
+              role="tab"
             >
-              <i :class="tab.icon"></i>
+              <i :class="tab.icon" aria-hidden="true"></i>
               {{ tab.label }}
             </button>
           </div>
           
           <div class="tab-content">
-            <div v-if="activeTab === 'posts'" class="posts-tab">
-              <h2><i class="fas fa-comment-alt"></i> Your Forum Posts</h2>
+            <!-- Posts Tab -->
+            <section 
+              v-if="activeTab === 'posts'" 
+              id="tab-posts"
+              role="tabpanel"
+              aria-labelledby="posts-tab"
+            >
+              <h2><i class="fas fa-comment-alt" aria-hidden="true"></i> Your Forum Posts</h2>
               <div v-if="userPosts.length > 0">
-                <PostList :posts="userPosts" :show-actions="true" @post-deleted="fetchUserPosts"/>
+                <PostList 
+                  :posts="userPosts" 
+                  :show-actions="true" 
+                />
               </div>
               <div v-else class="empty-state">
                 <p>You haven't created any posts yet.</p>
                 <router-link to="/forum/new" class="btn-primary">
-                  <i class="fas fa-plus"></i> Create Your First Post
+                  <i class="fas fa-plus" aria-hidden="true"></i> Create Your First Post
                 </router-link>
               </div>
-            </div>
+            </section>
             
-            <div v-else-if="activeTab === 'saved'" class="saved-tab">
-              <h2><i class="fas fa-bookmark"></i> Saved Resources</h2>
+            <!-- Saved Resources Tab -->
+            <section 
+              v-else-if="activeTab === 'saved'" 
+              id="tab-saved"
+              role="tabpanel"
+              aria-labelledby="saved-tab"
+            >
+              <h2><i class="fas fa-bookmark" aria-hidden="true"></i> Saved Resources</h2>
               <div v-if="savedResources.length > 0" class="resources-grid">
                 <ResourceCard 
                   v-for="resource in savedResources" 
@@ -114,28 +153,43 @@
               <div v-else class="empty-state">
                 <p>You haven't saved any resources yet.</p>
                 <router-link to="/resources" class="btn-primary">
-                  <i class="fas fa-search"></i> Browse Resources
+                  <i class="fas fa-search" aria-hidden="true"></i> Browse Resources
                 </router-link>
               </div>
-            </div>
+            </section>
             
-            <div v-else class="activity-tab">
-              <h2><i class="fas fa-chart-line"></i> Your Activity</h2>
+            <!-- Activity Tab -->
+            <section 
+              v-else 
+              id="tab-activity"
+              role="tabpanel"
+              aria-labelledby="activity-tab"
+            >
+              <h2><i class="fas fa-chart-line" aria-hidden="true"></i> Your Activity</h2>
               <ActivityTracker :show-extended="true"/>
-            </div>
+            </section>
           </div>
-        </div>
+        </main>
       </div>
-      
-      <BioEditModal 
-        v-if="showBioEdit" 
-        :current-bio="user.bio"
-        @close="showBioEdit = false"
-        @bio-updated="handleBioUpdated"
-      />
     </div>
   </div>
 </template>
+
+<style scoped>
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+</style>
+
+
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
@@ -243,18 +297,31 @@ export default {
   methods: {
     ...mapActions(['fetchCurrentUser']),
     async fetchUserData() {
-      this.loading = true
+      this.loading = true;
       try {
         await Promise.all([
           this.fetchUserPosts(),
           this.fetchUserStats(),
           this.fetchSavedResources()
-        ])
+        ]);
       } catch (error) {
-        console.error('Error fetching user data:', error)
-        this.$toast.error('Failed to load profile data')
+        console.error('Error fetching user data:', error);
+        if (this.$toast) {
+          this.$toast.error('Failed to load profile data. Please try again later.');
+        } else {
+          console.error('Toast notification system not available');
+        }
+        
+        // Set fallback data
+        this.userPosts = this.userPosts || [];
+        this.userStats = this.userStats || {
+          postCount: 0,
+          commentCount: 0,
+          savedResources: 0
+        };
+        this.savedResources = this.savedResources || [];
       } finally {
-        this.loading = false
+        this.loading = false;
       }
     },
     triggerFileInput() {
@@ -347,20 +414,19 @@ export default {
     },
     async fetchUserPosts() {
       try {
-        // Implement your actual post fetching logic here
-        // This is mock data for demonstration
+        // Mock data for demonstration - no backend connection
         this.userPosts = [
           {
             id: '1',
-            title: 'Getting started with Vue 3',
-            content: 'I recently started learning Vue 3 and wanted to share my experience...',
+            title: 'Welcome to the Demo Forum!',
+            content: 'This is a mock post for demonstration purposes. Since there\'s no real backend connection, feel free to use the comments section to test the functionality or communicate with other users.',
             createdAt: new Date().toISOString(),
-            commentCount: 5,
-            likes: 12,
+            commentCount: 0,
+            likes: 0,
             author: {
-              name: this.user.displayName,
-              username: this.user.username,
-              avatar: this.userPhotoUrl
+              name: this.user?.displayName || this.user?.name || this.user?.username || 'Demo User',
+              username: this.user?.username || 'demo-user',
+              avatar: this.userPhotoUrl || '/default-avatar.jpg'
             }
           }
         ]
@@ -372,12 +438,10 @@ export default {
     },
     async fetchUserStats() {
       try {
-        // Implement your actual stats fetching logic here
-        // This is mock data for demonstration
         this.userStats = {
           postCount: this.userPosts.length,
           commentCount: 15,
-          savedResources: 3
+          savedResources: this.savedResources.length
         }
       } catch (error) {
         console.error('Error fetching stats:', error)
@@ -385,19 +449,30 @@ export default {
     },
     async fetchSavedResources() {
       try {
-        // Implement your actual saved resources fetching logic here
-        // This is mock data for demonstration
         this.savedResources = [
           {
-            id: '1',
-            title: 'Vue 3 Composition API Guide',
-            description: 'A comprehensive guide to the new Composition API in Vue 3',
-            url: 'https://vuejs.org/guide/extras/composition-api-faq.html',
-            type: 'article',
-            tags: ['vue', 'composition-api', 'javascript'],
-            createdAt: new Date().toISOString()
+            id: 'mh2',
+            title: 'Mindfulness Meditation for Beginners',
+            description: '10-minute daily meditation practices to reduce stress',
+            url: 'https://www.mindful.org/meditation/mindfulness-getting-started/',
+            type: 'audio-guide',
+            tags: ['meditation', 'mindfulness', 'stress-relief'],
+            createdAt: new Date(Date.now() - 172800000).toISOString(),
+            image: 'https://images.unsplash.com/photo-1545205597-3d9d02c29597?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'
+          },
+          {
+            id: 'mh3',
+            title: 'Crisis Text Line',
+            description: 'Free 24/7 support for those in crisis - Text HOME to 741741',
+            url: 'https://www.crisistextline.org/',
+            type: 'crisis-support',
+            tags: ['emergency', 'support', 'text-help'],
+            createdAt: new Date(Date.now() - 259200000).toISOString(),
+            image: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'
           }
         ]
+        this.userStats.savedResources = this.savedResources.length
+        this.$toast.info(`Loaded ${this.savedResources.length} mental health resources`)
       } catch (error) {
         console.error('Error fetching saved resources:', error)
         this.$toast.error('Failed to load saved resources')

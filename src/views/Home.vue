@@ -17,7 +17,7 @@
       <div class="container">
         <div class="hero-grid">
           <div class="hero-content" data-aos="fade-right" data-aos-delay="100">
-            <div class="badge">You're Not Alone</div>
+
             <h1>
               <span class="gradient-text">Mental Health</span>
               <span>Support That Understands</span>
@@ -36,7 +36,7 @@
               </router-link>
             </div>
             
-            <div class="stats">
+            <!-- <div class="stats">
               <div class="stat-item">
                 <div class="number">10K+</div>
                 <div class="label">Community Members</div>
@@ -49,7 +49,7 @@
                 <div class="number">100%</div>
                 <div class="label">Anonymous</div>
               </div>
-            </div>
+            </div> -->
           </div>
           
           <div class="hero-visual" data-aos="fade-left" data-aos-delay="200">
@@ -202,6 +202,63 @@
       </div>
     </section>
 
+    <!-- NueraAI Glimpse Section -->
+<section class="nuera-glimpse">
+  <div class="container">
+    <div class="glimpse-content" data-aos="fade-up">
+      <div class="glimpse-text">
+        <span class="section-label">AI COMPANION</span>
+        <h2>Always Available Support</h2>
+        <p>Meet NueraAI - your 24/7 mental health companion. Get immediate, judgment-free support whenever you need it, even outside community hours.</p>
+        
+        <div class="ai-features">
+          <div class="ai-feature">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" stroke="#4F46E5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M22 4L12 14.01l-3-3" stroke="#4F46E5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Instant conversations anytime</span>
+          </div>
+          <div class="ai-feature">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" stroke="#4F46E5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M22 4L12 14.01l-3-3" stroke="#4F46E5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Evidence-based techniques</span>
+          </div>
+        </div>
+        
+        <router-link to="/about" class="btn outline">
+          <span>Learn About NueraAI</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </router-link>
+      </div>
+      <div class="glimpse-visual">
+        <div class="ai-bubble">
+          <div class="bubble-content">
+            <div class="bubble-text">Hi there! I'm NueraAI. How are you feeling today?</div>
+            <div class="bubble-time">Just now</div>
+          </div>
+        </div>
+        <div class="ai-bubble user">
+          <div class="bubble-content">
+            <div class="bubble-text">I've been feeling really anxious</div>
+            <div class="bubble-time">Just now</div>
+          </div>
+        </div>
+        <div class="ai-bubble">
+          <div class="bubble-content">
+            <div class="bubble-text">I'm here to listen. Would you like to try a quick grounding exercise?</div>
+            <div class="bubble-time">Just now</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
     <!-- Resources Section -->
     <section class="resources-section">
       <div class="container">
@@ -309,16 +366,292 @@
             </div>
             
             <div class="tab-pane" data-tab="videos">
-              <!-- Video content would go here -->
-            </div>
-            
-            <div class="tab-pane" data-tab="tools">
-              <!-- Tools content would go here -->
-            </div>
-            
-            <div class="tab-pane" data-tab="guides">
-              <!-- Guides content would go here -->
-            </div>
+  <div class="resources-grid">
+    <div class="resource-card">
+      <div class="resource-image">
+        <div class="video-thumbnail">
+          <img src="https://images.unsplash.com/photo-1545205597-3d9d02c29597?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Mindfulness Meditation">
+          <div class="play-button">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M10 8L16 12L10 16V8Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+        <div class="category-badge">Mindfulness</div>
+      </div>
+      <div class="resource-content">
+        <div class="meta">
+          <span class="duration">15 min</span>
+          <span class="difficulty">Beginner</span>
+        </div>
+        <h3>5-Minute Mindfulness Meditation for Beginners</h3>
+        <p>Quick and easy guided meditation to help reduce stress and increase present-moment awareness.</p>
+        <div class="resource-footer">
+          <router-link to="/videos/mindfulness" class="resource-link">
+            Watch Video
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="#4F46E5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </router-link>
+          <div class="bookmark">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M5 5C5 3.89543 5.89543 3 7 3H17C18.1046 3 19 3.89543 19 5V21L12 17L5 21V5Z" stroke="#6B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="resource-card">
+      <div class="resource-image">
+        <div class="video-thumbnail">
+          <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="CBT Techniques">
+          <div class="play-button">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M10 8L16 12L10 16V8Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+        <div class="category-badge">CBT</div>
+      </div>
+      <div class="resource-content">
+        <div class="meta">
+          <span class="duration">22 min</span>
+          <span class="difficulty">Intermediate</span>
+        </div>
+        <h3>Cognitive Behavioral Therapy: Changing Negative Thoughts</h3>
+        <p>Learn practical CBT techniques to identify and challenge negative thought patterns.</p>
+        <div class="resource-footer">
+          <router-link to="/videos/cbt-techniques" class="resource-link">
+            Watch Video
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="#4F46E5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </router-link>
+          <div class="bookmark">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M5 5C5 3.89543 5.89543 3 7 3H17C18.1046 3 19 3.89543 19 5V21L12 17L5 21V5Z" stroke="#6B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="resource-card">
+      <div class="resource-image">
+        <div class="video-thumbnail">
+          <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Breathing Exercises">
+          <div class="play-button">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M10 8L16 12L10 16V8Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+        <div class="category-badge">Anxiety</div>
+      </div>
+      <div class="resource-content">
+        <div class="meta">
+          <span class="duration">8 min</span>
+          <span class="difficulty">Beginner</span>
+        </div>
+        <h3>4-7-8 Breathing Technique for Anxiety Relief</h3>
+        <p>Dr. Andrew Weil's simple breathing method to quickly calm your nervous system.</p>
+        <div class="resource-footer">
+          <router-link to="/videos/breathing" class="resource-link">
+            Watch Video
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="#4F46E5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </router-link>
+          <div class="bookmark">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M5 5C5 3.89543 5.89543 3 7 3H17C18.1046 3 19 3.89543 19 5V21L12 17L5 21V5Z" stroke="#6B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="tab-pane" data-tab="tools">
+  <div class="resources-grid">
+    <div class="resource-card">
+      <div class="resource-image">
+        <img src="https://images.unsplash.com/photo-1506784365847-bbad939e9335?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Mood Tracker">
+        <div class="category-badge">Tracking</div>
+      </div>
+      <div class="resource-content">
+        <div class="meta">
+          <span class="duration">Interactive</span>
+          <span class="difficulty">All Levels</span>
+        </div>
+        <h3>Mood & Symptom Tracker</h3>
+        <p>Monitor your emotional patterns, identify triggers, and track progress over time with our visual tracker.</p>
+        <div class="resource-footer">
+          <router-link to="/tools/mood-tracker" class="resource-link">
+            Try Tool
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="#4F46E5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </router-link>
+          <div class="bookmark">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M5 5C5 3.89543 5.89543 3 7 3H17C18.1046 3 19 3.89543 19 5V21L12 17L5 21V5Z" stroke="#6B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="resource-card">
+      <div class="resource-image">
+        <img src="https://images.unsplash.com/photo-1544161515-4ab6ce6db874?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Journal Prompts">
+        <div class="category-badge">Journaling</div>
+      </div>
+      <div class="resource-content">
+        <div class="meta">
+          <span class="duration">Interactive</span>
+          <span class="difficulty">All Levels</span>
+        </div>
+        <h3>Guided Mental Health Journal</h3>
+        <p>Daily prompts and exercises to help process emotions, practice gratitude, and reflect on your mental health journey.</p>
+        <div class="resource-footer">
+          <router-link to="/tools/journal" class="resource-link">
+            Try Tool
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="#4F46E5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </router-link>
+          <div class="bookmark">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M5 5C5 3.89543 5.89543 3 7 3H17C18.1046 3 19 3.89543 19 5V21L12 17L5 21V5Z" stroke="#6B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="resource-card">
+      <div class="resource-image">
+        <img src="https://images.unsplash.com/photo-1593810450967-f9c42742e326?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Anxiety Relief">
+        <div class="category-badge">Anxiety</div>
+      </div>
+      <div class="resource-content">
+        <div class="meta">
+          <span class="duration">Interactive</span>
+          <span class="difficulty">Beginner</span>
+        </div>
+        <h3>5-4-3-2-1 Grounding Exercise</h3>
+        <p>Interactive tool to help manage anxiety attacks by focusing on your senses and surroundings.</p>
+        <div class="resource-footer">
+          <router-link to="/tools/grounding" class="resource-link">
+            Try Tool
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="#4F46E5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </router-link>
+          <div class="bookmark">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M5 5C5 3.89543 5.89543 3 7 3H17C18.1046 3 19 3.89543 19 5V21L12 17L5 21V5Z" stroke="#6B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="tab-pane" data-tab="guides">
+  <div class="resources-grid">
+    <div class="resource-card">
+      <div class="resource-image">
+        <img src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Anxiety Guide">
+        <div class="category-badge">Anxiety</div>
+      </div>
+      <div class="resource-content">
+        <div class="meta">
+          <span class="reading-time">12 min read</span>
+          <span class="difficulty">Beginner</span>
+        </div>
+        <h3>The Complete Guide to Managing Anxiety</h3>
+        <p>Comprehensive guide covering symptoms, coping strategies, and when to seek professional help.</p>
+        <div class="resource-footer">
+          <router-link to="/guides/anxiety" class="resource-link">
+            Read Guide
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="#4F46E5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </router-link>
+          <div class="bookmark">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M5 5C5 3.89543 5.89543 3 7 3H17C18.1046 3 19 3.89543 19 5V21L12 17L5 21V5Z" stroke="#6B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="resource-card">
+      <div class="resource-image">
+        <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Depression Guide">
+        <div class="category-badge">Depression</div>
+      </div>
+      <div class="resource-content">
+        <div class="meta">
+          <span class="reading-time">18 min read</span>
+          <span class="difficulty">Intermediate</span>
+        </div>
+        <h3>Navigating Depression: A Step-by-Step Recovery Guide</h3>
+        <p>Evidence-based strategies for understanding and overcoming depressive episodes.</p>
+        <div class="resource-footer">
+          <router-link to="/guides/depression" class="resource-link">
+            Read Guide
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="#4F46E5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </router-link>
+          <div class="bookmark">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M5 5C5 3.89543 5.89543 3 7 3H17C18.1046 3 19 3.89543 19 5V21L12 17L5 21V5Z" stroke="#6B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="resource-card">
+      <div class="resource-image">
+        <img src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Mental Health First Aid">
+        <div class="category-badge">Education</div>
+      </div>
+      <div class="resource-content">
+        <div class="meta">
+          <span class="reading-time">25 min read</span>
+          <span class="difficulty">All Levels</span>
+        </div>
+        <h3>Mental Health First Aid: Supporting Loved Ones</h3>
+        <p>Learn how to recognize warning signs and provide appropriate support to those struggling.</p>
+        <div class="resource-footer">
+          <router-link to="/guides/first-aid" class="resource-link">
+            Read Guide
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="#4F46E5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </router-link>
+          <div class="bookmark">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M5 5C5 3.89543 5.89543 3 7 3H17C18.1046 3 19 3.89543 19 5V21L12 17L5 21V5Z" stroke="#6B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
           </div>
         </div>
         
@@ -655,6 +988,8 @@ export default {
 </script>
 
 <style lang="scss">
+
+
 /* Color Variables */
 $primary: #4F46E5;
 $primary-light: #818CF8;
@@ -674,6 +1009,135 @@ $white: #FFFFFF;
   position: relative;
 }
 
+/* NueraAI Glimpse Section */
+.nuera-glimpse {
+  padding: 80px 0;
+  background: linear-gradient(to bottom, $white 0%, $gray-lighter 100%);
+  
+  .glimpse-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .glimpse-text {
+    .section-label {
+      display: inline-block;
+      color: $primary;
+      font-size: 0.875rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+      padding: 6px 12px;
+      background: rgba($primary, 0.1);
+      border-radius: 50px;
+    }
+    
+    h2 {
+      font-size: clamp(1.75rem, 3vw, 2.25rem);
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 1.5rem;
+      color: $dark;
+    }
+    
+    p {
+      color: $gray;
+      margin-bottom: 2rem;
+      line-height: 1.7;
+      font-size: 1.125rem;
+    }
+    
+    .ai-features {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 2rem;
+      
+      .ai-feature {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        
+        svg {
+          flex-shrink: 0;
+          color: $primary;
+        }
+        
+        span {
+          color: $dark;
+        }
+      }
+    }
+  }
+
+  
+  .glimpse-visual {
+    position: relative;
+    background: $white;
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    max-width: 400px;
+    margin-left: auto;
+    
+    .ai-bubble {
+      background: rgba($primary, 0.1);
+      border-radius: 18px;
+      padding: 12px 16px;
+      margin-bottom: 12px;
+      max-width: 80%;
+      
+      &.user {
+        background: $primary;
+        color: $white;
+        margin-left: auto;
+        
+        .bubble-text {
+          color: $white;
+        }
+        
+        .bubble-time {
+          color: rgba($white, 0.7);
+        }
+      }
+      
+      .bubble-content {
+        .bubble-text {
+          font-size: 0.9375rem;
+          line-height: 1.5;
+          color: $dark;
+        }
+        
+        .bubble-time {
+          font-size: 0.6875rem;
+          color: $gray;
+          text-align: right;
+          margin-top: 4px;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .nuera-glimpse {
+    padding: 60px 0;
+    
+    .glimpse-content {
+      grid-template-columns: 1fr;
+      gap: 40px;
+      
+      .glimpse-visual {
+        margin: 0 auto;
+      }
+    }
+  }
+}
+
 .container {
   max-width: 1200px;
   margin: 0 auto;
@@ -682,6 +1146,68 @@ $white: #FFFFFF;
   z-index: 2;
 }
 
+
+.video-thumbnail {
+  position: relative;
+  height: 180px;
+  overflow: hidden;
+  
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s;
+  }
+  
+  .play-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50px;
+    height: 50px;
+    background: rgba($primary, 0.7);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+    
+    svg {
+      margin-left: 3px; // Center the play icon
+    }
+  }
+  
+  &:hover {
+    img {
+      transform: scale(1.05);
+    }
+    
+    .play-button {
+      background: rgba($primary, 0.9);
+      transform: translate(-50%, -50%) scale(1.1);
+    }
+  }
+}
+
+.meta {
+  .duration {
+    position: relative;
+    padding-left: 20px;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 16px;
+      height: 16px;
+      background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M12 6V12L16 14' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-size: contain;
+    }
+  }
+}
 /* Background Animation */
 .bg-animation {
   position: fixed;
@@ -828,8 +1354,8 @@ $white: #FFFFFF;
 
 /* Section Header */
 .section-header {
-  text-align: center;
-  max-width: 700px;
+  text-align: left;
+
   margin: 0 auto 60px;
   
   .section-label {
@@ -838,6 +1364,7 @@ $white: #FFFFFF;
     font-size: 0.875rem;
     font-weight: 600;
     letter-spacing: 0.1em;
+    text-align: left;
     text-transform: uppercase;
     margin-bottom: 1rem;
     padding: 6px 12px;

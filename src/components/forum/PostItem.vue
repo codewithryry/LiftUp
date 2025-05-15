@@ -1,12 +1,12 @@
 <template>
-  <div class="post-card">
+  <div class="post-card" :class="{ 'expanded': isExpanded, 'has-comments': showComments }">
     <div class="post-header">
-      <div class="post-meta">
-        <span class="post-category" :class="post.category">{{ categoryLabel }}</span>
-        <span class="post-date">{{ formattedDate }}</span>
-      </div>
-      <h3 class="post-title">{{ post.title }}</h3>
-    </div>
+  <div class="post-meta">
+    <span class="post-category" :class="post.category">{{ categoryLabel }}</span>
+    <span class="post-date">{{ formattedDate }}</span>
+  </div>
+  <h3 class="post-title">{{ post.title }}</h3>
+</div>
     
     <div class="post-content">
       <p>{{ truncatedContent }}</p>
@@ -17,34 +17,47 @@
     
     <div class="post-footer">
       <div class="post-stats">
-        <span class="comments">
+        <button 
+          @click="toggleComments" 
+          class="comment-btn"
+          :class="{ active: showComments }"
+        >
           <svg viewBox="0 0 24 24" fill="none">
             <path d="M21 15C21 15.5304 20.7893 16.0391 20.4142 16.4142C20.0391 16.7893 19.5304 17 19 17H7L3 21V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V15Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
-          {{ post.commentCount }} comments
-        </span>
-        <span class="likes">
-          <svg viewBox="0 0 24 24" fill="none">
-            <path d="M12 21.35L10.55 20.03C5.4 15.36 2 12.28 2 8.5C2 5.42 4.42 3 7.5 3C9.24 3 10.91 3.81 12 5.09C13.09 3.81 14.76 3 16.5 3C19.58 3 22 5.42 22 8.5C22 12.28 18.6 15.36 13.45 20.03L12 21.35Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          {{ post.likeCount }} likes
-        </span>
-      </div>
-      
-      <div class="post-actions" v-if="showActions">
-        <button @click="editPost" class="btn-icon">
-          <svg viewBox="0 0 24 24" fill="none">
-            <path d="M11 4H4C3.46957 4 2.96086 4.21071 2.58579 4.58579C2.21071 4.96086 2 5.46957 2 6V20C2 20.5304 2.21071 21.0391 2.58579 21.4142C2.96086 21.7893 3.46957 22 4 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M18.5 2.5C18.8978 2.10217 19.4374 1.87868 20 1.87868C20.5626 1.87868 21.1022 2.10217 21.5 2.5C21.8978 2.89782 22.1213 3.43739 22.1213 4C22.1213 4.56261 21.8978 5.10217 21.5 5.5L12 15L8 16L9 12L18.5 2.5Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
+          Comment
         </button>
-        <button @click="deletePost" class="btn-icon danger">
+        
+        <button 
+          class="like-btn" 
+          :class="{ liked: false }"
+          disabled
+        >
           <svg viewBox="0 0 24 24" fill="none">
-            <path d="M3 6H5H21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M8 6V4C8 3.46957 8.21071 2.96086 8.58579 2.58579C8.96086 2.21071 9.46957 2 10 2H14C14.5304 2 15.0391 2.21071 15.4142 2.58579C15.7893 2.96086 16 3.46957 16 4V6M19 6V20C19 20.5304 18.7893 21.0391 18.4142 21.4142C18.0391 21.7893 17.5304 22 17 22H7C6.46957 22 5.96086 21.7893 5.58579 21.4142C5.21071 21.0391 5 20.5304 5 20V6H19Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M12 21.35L10.55 20.03C5.4 15.36 2 12.28 2 8.5C2 5.42 4.42 3 7.5 3C9.24 3 10.91 3.81 12 5.09C13.09 3.81 14.76 3 16.5 3C19.58 3 22 5.42 22 8.5C22 12.28 18.6 15.36 13.45 20.03L12 21.35Z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
+          Like
+        </button>
+
+        <button @click="sharePost" class="share-btn">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M18 8C19.6569 8 21 6.65685 21 5C21 3.34315 19.6569 2 18 2C16.3431 2 15 3.34315 15 5C15 6.65685 16.3431 8 18 8Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M6 15C7.65685 15 9 13.6569 9 12C9 10.3431 7.65685 9 6 9C4.34315 9 3 10.3431 3 12C3 13.6569 4.34315 15 6 15Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M18 22C19.6569 22 21 20.6569 21 19C21 17.3431 19.6569 16 18 16C16.3431 16 15 17.3431 15 19C15 20.6569 16.3431 22 18 22Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M8.59 13.51L15.42 17.49" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M15.41 6.51L8.59 10.49" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Share
         </button>
       </div>
+    </div>
+    
+    <!-- Comments Section -->
+    <div v-if="showComments" class="comments-section">
+      <CommentSection 
+        :postId="post.id" 
+        @comment-added="handleCommentAdded"
+      />
     </div>
     
     <!-- Post Detail Modal -->
@@ -58,9 +71,8 @@
         
         <div class="modal-post-header">
           <div class="author-info">
-            <img :src="post.author.avatar || require('@/assets/default-avatar.png')" alt="Author" class="author-avatar">
             <div>
-              <h4>{{ post.author.username }}</h4>
+              <h4>{{ post.author?.username || 'Unknown Author' }}</h4>
               <span class="post-date">{{ formattedDate }}</span>
             </div>
           </div>
@@ -72,7 +84,10 @@
           <p>{{ post.content }}</p>
         </div>
         
-        <CommentSection :postId="post.id" :comments="post.comments" />
+        <CommentSection 
+          :postId="post.id" 
+          @comment-added="handleCommentAdded"
+        />
       </div>
     </div>
   </div>
@@ -88,7 +103,10 @@ export default {
   props: {
     post: {
       type: Object,
-      required: true
+      required: true,
+      validator: (value) => {
+        return value.id && value.title && value.content
+      }
     },
     showActions: {
       type: Boolean,
@@ -101,7 +119,8 @@ export default {
   },
   data() {
     return {
-      isExpanded: false
+      isExpanded: false,
+      showComments: false
     }
   },
   computed: {
@@ -135,16 +154,48 @@ export default {
     expandPost() {
       this.isExpanded = !this.isExpanded
     },
+    toggleComments() {
+      this.showComments = !this.showComments
+    },
+    handleCommentAdded() {
+      // No longer tracking comment count
+    },
+    sharePost() {
+      if (navigator.share) {
+        navigator.share({
+          title: this.post.title,
+          text: this.truncatedContent,
+          url: `${window.location.origin}/forum/post/${this.post.id}`
+        }).catch(err => {
+          console.log('Error sharing:', err);
+          this.copyToClipboard();
+        });
+      } else {
+        this.copyToClipboard();
+      }
+    },
+    copyToClipboard() {
+      const el = document.createElement('textarea');
+      el.value = `${window.location.origin}/forum/post/${this.post.id}`;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+      this.$toast.success('Link copied to clipboard!');
+    },
     editPost() {
       this.$router.push(`/forum/edit/${this.post.id}`)
     },
     async deletePost() {
+      if (!confirm('Are you sure you want to delete this post?')) return
+      
       try {
         await this.$store.dispatch('deleteForumPost', this.post.id)
         this.$emit('post-deleted')
         this.$toast.success('Post deleted successfully')
       } catch (error) {
-        this.$toast.error('Failed to delete post')
+        console.error('Error deleting post:', error)
+        this.$toast.error(error.message || 'Failed to delete post')
       }
     }
   }
@@ -159,9 +210,21 @@ export default {
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
   transition: all 0.3s ease;
   margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  min-height: 200px;
+  height: auto;
   
   &:hover {
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  &.expanded {
+    min-height: 300px;
+  }
+
+  &.has-comments {
+    min-height: 400px;
   }
 }
 
@@ -174,8 +237,10 @@ export default {
     margin-bottom: 0.75rem;
     font-size: 0.875rem;
     color: #666;
+    justify-content: space-between;
+    width: 100%;
   }
-  
+
   .post-category {
     padding: 0.25rem 0.75rem;
     border-radius: 20px;
@@ -213,12 +278,16 @@ export default {
 }
 
 .post-content {
+  flex-grow: 1;
   margin-bottom: 1.5rem;
   color: #4b5563;
   line-height: 1.6;
+  overflow: hidden;
+  transition: all 0.3s ease;
   
   p {
     margin: 0 0 1rem 0;
+    transition: all 0.3s ease;
   }
   
   .read-more {
@@ -244,15 +313,48 @@ export default {
   
   .post-stats {
     display: flex;
-    gap: 1.5rem;
-    font-size: 0.875rem;
-    color: #666;
+    gap: 1rem;
     
-    svg {
-      width: 18px;
-      height: 18px;
-      margin-right: 0.5rem;
-      vertical-align: middle;
+    .comment-btn, .like-btn, .share-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: none;
+      border: none;
+      padding: 0.5rem 0.75rem;
+      cursor: pointer;
+      color: #666;
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+      border-radius: 6px;
+      
+      svg {
+        width: 18px;
+        height: 18px;
+      }
+      
+      &:hover {
+        background: #f5f5f5;
+      }
+    }
+    
+    .comment-btn.active {
+      color: #6366f1;
+      background: rgba(99, 102, 241, 0.1);
+    }
+    
+    .like-btn {
+      cursor: default;
+      opacity: 0.7;
+      
+      &:hover {
+        background: none;
+      }
+    }
+    
+    .share-btn:hover {
+      color: #10b981;
+      background: rgba(16, 185, 129, 0.1);
     }
   }
   
@@ -285,6 +387,20 @@ export default {
     &:hover {
       background: rgba(239, 68, 68, 0.1);
     }
+  }
+}
+
+.comments-section {
+  flex-grow: 1;
+  margin-top: 1.5rem;
+  border-top: 1px solid #f0f0f0;
+  padding-top: 1.5rem;
+  transition: all 0.3s ease;
+  max-height: 0;
+  overflow: hidden;
+  
+  .post-card.has-comments & {
+    max-height: 1000px;
   }
 }
 
@@ -346,13 +462,6 @@ export default {
     align-items: center;
     gap: 1rem;
     
-    .author-avatar {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      object-fit: cover;
-    }
-    
     h4 {
       margin: 0 0 0.25rem 0;
       font-size: 1.1rem;
@@ -360,6 +469,7 @@ export default {
     
     .post-date {
       font-size: 0.875rem;
+      text-align: right;
       color: #666;
     }
   }
@@ -381,7 +491,24 @@ export default {
   }
 }
 
+button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
 @media (max-width: 768px) {
+  .post-card {
+    min-height: 180px;
+    
+    &.expanded {
+      min-height: 280px;
+    }
+    
+    &.has-comments {
+      min-height: 350px;
+    }
+  }
+  
   .post-footer {
     flex-direction: column;
     gap: 1rem;

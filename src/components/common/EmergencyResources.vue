@@ -2,22 +2,47 @@
   <div class="emergency-container">
     <!-- Hero Section with Background Image -->
     <section class="emergency-hero">
-      <div class="hero-overlay"></div>
-      <div class="hero-content">
-        <h1 class="hero-title">Emergency Support</h1>
-        <p class="hero-subtitle">Immediate help from trained professionals when you need it most</p>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <h1 class="hero-title">Emergency Support</h1>
+    <p class="hero-subtitle">Immediate help from trained professionals when you need it most</p>
+    <div class="hero-actions">
+    </div>
+  </div>
+</section>
+
+<section class="emergency-actions">
+      <div class="action-grid">
+        <div class="action-card chat-action">
+  <img src="https://images.unsplash.com/photo-1639762681057-408e52192e55?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Nuera AI Chatbot" class="action-bg">
+  <div class="action-content">
+    <div class="action-icon">
+      <i class="fas fa-comment-dots" style="color: #4e79ff;"></i>
+    </div>
+    <h3>Nuera AI Assistant</h3>
+    <p>Get instant answers from our intelligent chatbot</p>
+    <button class="action-btn" @click="startCrisisChat" >
+      Start Chat <i class="fas fa-arrow-right"></i>
+    </button>
+  </div>
+</div>
+
         
-        <div class="hero-actions">
-          <button class="hero-btn primary" @click="scrollToSection('hotlines')">
-            <i class="fas fa-phone-alt"></i> Crisis Hotlines
-          </button>
-          <button class="hero-btn secondary" @click="scrollToSection('resources')">
-            <i class="fas fa-map-marker-alt"></i> Local Resources
-          </button>
+        <div class="action-card therapist-action">
+          <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Therapist" class="action-bg">
+          <div class="action-content">
+            <div class="action-icon">
+              <i class="fas fa-user-md"></i>
+            </div>
+            <h3>Therapist Finder</h3>
+            <p>Locate mental health professionals near you</p>
+            <button class="action-btn" @click="findTherapist">
+              Find Help <i class="fas fa-arrow-right"></i>
+            </button>
+          </div>
         </div>
       </div>
     </section>
-
     <!-- Hotlines Section -->
     <section id="hotlines" class="emergency-section" ref="hotlines">
       <div class="section-header">
@@ -79,38 +104,6 @@
       </div>
     </section>
 
-    <!-- Immediate Actions -->
-    <section class="emergency-actions">
-      <div class="action-grid">
-        <div class="action-card chat-action">
-          <img src="https://images.unsplash.com/photo-1586769852836-bc069f19e1b6?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Online chat" class="action-bg">
-          <div class="action-content">
-            <div class="action-icon">
-              <i class="fas fa-comment-medical"></i>
-            </div>
-            <h3>Online Crisis Chat</h3>
-            <p>Connect with a trained counselor via text message</p>
-            <button class="action-btn" @click="startCrisisChat">
-              Start Chat <i class="fas fa-arrow-right"></i>
-            </button>
-          </div>
-        </div>
-        
-        <div class="action-card therapist-action">
-          <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Therapist" class="action-bg">
-          <div class="action-content">
-            <div class="action-icon">
-              <i class="fas fa-user-md"></i>
-            </div>
-            <h3>Therapist Finder</h3>
-            <p>Locate mental health professionals near you</p>
-            <button class="action-btn" @click="findTherapist">
-              Find Help <i class="fas fa-arrow-right"></i>
-            </button>
-          </div>
-        </div>
-      </div>
-    </section>
 
     <!-- Emergency Footer -->
     <footer class="emergency-footer">
@@ -119,9 +112,7 @@
           <p>You are not alone. Help is available.</p>
         </div>
         <div class="footer-links">
-          <a href="#" @click.prevent="scrollToTop">Back to Top</a>
-          <router-link to="/self-care">Self-Care Resources</router-link>
-          <router-link to="/forum">Community Support</router-link>
+
         </div>
         <div class="footer-cta">
           <p>Need immediate assistance?</p>
@@ -200,9 +191,9 @@ export default {
       // Analytics tracking would go here
     },
     startCrisisChat() {
-      // Implementation for crisis chat
-      console.log("Starting crisis chat");
-    },
+      this.$router.push('/emergency/neura');
+    },   
+
     findTherapist() {
       // Implementation for therapist finder
       console.log("Finding therapist");
@@ -212,6 +203,63 @@ export default {
 </script>
 
 <style scoped>
+
+
+.hero-actions {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.hero-buttons-container {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+}
+
+.hero-btn {
+  padding: 14px 24px;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: var(--transition);
+  cursor: pointer;
+  border: none;
+  white-space: nowrap;
+}
+
+/* Mobile-specific styles */
+@media (max-width: 768px) {
+  .hero-buttons-container {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+    max-width: 300px;
+    margin: 0 auto;
+  }
+  
+  .hero-btn {
+    width: 100%;
+    justify-content: right;
+    padding: 12px 20px;
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-btn {
+    padding: 12px 16px;
+    font-size: 0.9rem;
+  }
+  
+  .hero-buttons-container {
+    max-width: 100%;
+  }
+}
 .emergency-container {
   --primary: #7C3AED;
   --primary-light: #8B5CF6;

@@ -10,18 +10,15 @@
         </button>
       </div>
     </div>
-    
-    <div v-else class="post-list">
-      <PostItem 
-        v-for="post in posts" 
-        :key="post.id" 
-        :post="post"
-        :show-actions="showActions"
-        @post-deleted="$emit('post-deleted')"
-        @like-post="$emit('like-post', post.id)"
-        @toggle-comments="$emit('toggle-comments', post.id)"
-      />
-    </div>
+
+    <PostItem 
+      v-for="post in posts" 
+      :key="post.id" 
+      :post="post"
+      :show-actions="showActions"
+      @post-deleted="$emit('refresh')"
+      @update-post="updatePost"
+    />
   </div>
 </template>
 
@@ -35,12 +32,16 @@ export default {
   props: {
     posts: {
       type: Array,
-      required: true,
-      default: () => []
+      required: true
     },
     showActions: {
       type: Boolean,
       default: true
+    }
+  },
+  methods: {
+    updatePost(updatedPost) {
+      this.$emit('update-post', updatedPost);
     }
   }
 }

@@ -19,22 +19,37 @@
             </button>
           </div>
           
-          <div class="quick-filters">
-            <button 
-              v-for="category in popularCategories" 
-              :key="category.id"
-              @click="setQuickFilter(category.id)"
-              :class="{ active: filters.category === category.id }"
-            >
-              {{ category.name }}
-            </button>
-          </div>
+          <div class="desktop-only">
+      <div class="quick-filters">
+        <button 
+          v-for="category in popularCategories" 
+          :key="category.id"
+          @click="setQuickFilter(category.id)"
+          :class="{ active: filters.category === category.id }"
+        >
+          {{ category.name }}
+        </button>
+      </div>
+      </div>
         </div>
       </div>
     </div>
 
     <div class="resources-main">
-      <aside class="sidebar-filters">
+      <!-- Mobile filter toggle button -->
+      <button class="mobile-filter-toggle" @click="showMobileFilters = !showMobileFilters">
+        <i class="fas fa-filter"></i>
+        {{ showMobileFilters ? 'Hide Filters' : 'Show Filters' }}
+      </button>
+      
+      <!-- Overlay that appears when filters are visible on mobile -->
+      <div 
+        class="sidebar-overlay" 
+        :class="{ visible: showMobileFilters }"
+        @click="showMobileFilters = false"
+      ></div>
+
+      <aside class="sidebar-filters" :class="{ 'mobile-visible': showMobileFilters }">
         <div class="filter-section">
           <h3>Filter Resources</h3>
           
@@ -178,6 +193,249 @@
   </div>
 </template>
 
+<script>
+import ResourceCard from '@/components/resources/ResourceCard.vue'
+import ResourceDetailModal from '@/components/resources/ResourceDetailModal.vue'
+import { fetchResources } from '@/services/resources.js'
+
+export default {
+  components: {
+    ResourceCard,
+    ResourceDetailModal
+  },
+  data() {
+    return {
+      resources: [],
+      loading: true,
+      filters: {
+        category: 'all',
+        type: 'all',
+        search: ''
+      },
+      categories: [
+        { id: 'all', name: 'All Categories' },
+        { id: 'depression', name: 'Depression' },
+        { id: 'anxiety', name: 'Anxiety' },
+        { id: 'stress', name: 'Stress' },
+        { id: 'ptsd', name: 'PTSD' },
+        { id: 'bipolar', name: 'Bipolar' },
+        { id: 'ocd', name: 'OCD' },
+        { id: 'adhd', name: 'ADHD' },
+        { id: 'eating-disorders', name: 'Eating Disorders' },
+        { id: 'addiction', name: 'Addiction' },
+        { id: 'sleep', name: 'Sleep Issues' },
+        { id: 'grief', name: 'Grief' }
+      ],
+      types: [
+        { id: 'all', name: 'All Types' },
+        { id: 'article', name: 'Articles' },
+        { id: 'video', name: 'Videos' },
+        { id: 'podcast', name: 'Podcasts' },
+        { id: 'tool', name: 'Tools' },
+        { id: 'app', name: 'Apps' },
+        { id: 'therapy', name: 'Therapy Options' },
+        { id: 'community', name: 'Communities' },
+        { id: 'book', name: 'Books' },
+        { id: 'course', name: 'Courses' }
+      ],
+      popularCategories: [
+        { id: 'anxiety', name: 'Anxiety' },
+        { id: 'depression', name: 'Depression' },
+        { id: 'stress', name: 'Stress' },
+        { id: 'sleep', name: 'Sleep Issues' },
+        { id: 'addiction', name: 'Addiction' },
+        { id: 'ptsd', name: 'PTSD' }
+      ],
+      savedResources: JSON.parse(localStorage.getItem('savedResources')) || [],
+      sortBy: 'relevance',
+      currentPage: 1,
+      itemsPerPage: 12,
+      selectedResource: null,
+      searchTimeout: null,
+      gridView: true,
+      showMobileFilters: false
+    }
+  },
+  computed: {
+    filteredResources() {
+      let filtered = this.resources.filter(resource => {
+        const matchesCategory = this.filters.category === 'all' || 
+          resource.categories.includes(this.filters.category)
+        const matchesType = this.filters.type === 'all' || 
+          resource.type === this.filters.type
+        const matchesSearch = this.filters.search === '' || 
+          resource.title.toLowerCase().includes(this.filters.search.toLowerCase()) || 
+          resource.description.toLowerCase().includes(this.filters.search.toLowerCase()) ||
+          resource.author?.toLowerCase().includes(this.filters.search.toLowerCase())
+        
+        return matchesCategory && matchesType && matchesSearch
+      })
+
+      return this.applySorting(filtered)
+    },
+    
+    paginatedResources() {
+      const start = (this.currentPage - 1) * this.itemsPerPage
+      const end = start + this.itemsPerPage
+      return this.filteredResources.slice(start, end)
+    },
+    
+    totalPages() {
+      return Math.ceil(this.filteredResources.length / this.itemsPerPage)
+    }
+  },
+  watch: {
+    filters: {
+      handler() {
+        this.currentPage = 1
+      },
+      deep: true
+    }
+  },
+  async created() {
+    await this.fetchResourcesData()
+    if (this.$route.hash) {
+      this.scrollToResource(this.$route.hash.substring(1))
+    }
+  },
+  methods: {
+    async fetchResourcesData() {
+      this.loading = true
+      try {
+        this.resources = await fetchResources()
+        // Enhance resources with mock data for demo
+        this.resources = this.resources.map(resource => ({
+          ...resource,
+          date: resource.date || new Date(Date.now() - Math.floor(Math.random() * 1000 * 60 * 60 * 24 * 30 * 6)).toISOString(),
+          rating: resource.rating || (Math.random() * 2 + 3).toFixed(1),
+          categories: resource.categories || [this.categories[Math.floor(Math.random() * this.categories.length)].id]
+        }))
+      } catch (error) {
+        console.error('Error fetching resources:', error)
+        this.$toast.error('Failed to load resources. Please try again later.')
+      } finally {
+        this.loading = false
+      }
+    },
+    
+    handleSearch() {
+      clearTimeout(this.searchTimeout)
+      this.searchTimeout = setTimeout(() => {
+        this.currentPage = 1
+      }, 300)
+    },
+    
+    clearSearch() {
+      this.filters.search = ''
+      this.currentPage = 1
+    },
+    
+    setQuickFilter(categoryId) {
+      this.filters.category = categoryId
+      this.currentPage = 1
+    },
+    
+    getCategoryName(id) {
+      const category = this.categories.find(c => c.id === id)
+      return category ? category.name : ''
+    },
+    
+    resetFilters() {
+      this.filters = {
+        category: 'all',
+        type: 'all',
+        search: ''
+      }
+      this.sortBy = 'relevance'
+      this.currentPage = 1
+    },
+    
+    toggleSavedResource(resourceId) {
+      const index = this.savedResources.indexOf(resourceId)
+      if (index === -1) {
+        this.savedResources.push(resourceId)
+        this.$toast.success('Added to saved resources')
+      } else {
+        this.savedResources.splice(index, 1)
+        this.$toast.info('Removed from saved resources')
+      }
+      localStorage.setItem('savedResources', JSON.stringify(this.savedResources))
+    },
+    
+    isResourceSaved(resourceId) {
+      return this.savedResources.includes(resourceId)
+    },
+    
+    applySorting(resources) {
+      switch (this.sortBy) {
+        case 'newest':
+          return [...resources].sort((a, b) => new Date(b.date) - new Date(a.date))
+        case 'oldest':
+          return [...resources].sort((a, b) => new Date(a.date) - new Date(b.date))
+        case 'title-asc':
+          return [...resources].sort((a, b) => a.title.localeCompare(b.title))
+        case 'title-desc':
+          return [...resources].sort((a, b) => b.title.localeCompare(a.title))
+        case 'rating':
+          return [...resources].sort((a, b) => parseFloat(b.rating) - parseFloat(a.rating))
+        default:
+          if (this.filters.search) {
+            // Sort by relevance to search term
+            return [...resources].sort((a, b) => {
+              const aTitleMatch = a.title.toLowerCase().includes(this.filters.search.toLowerCase())
+              const bTitleMatch = b.title.toLowerCase().includes(this.filters.search.toLowerCase())
+              
+              if (aTitleMatch && !bTitleMatch) return -1
+              if (!aTitleMatch && bTitleMatch) return 1
+              
+              const aDescMatch = a.description.toLowerCase().includes(this.filters.search.toLowerCase())
+              const bDescMatch = b.description.toLowerCase().includes(this.filters.search.toLowerCase())
+              
+              if (aDescMatch && !bDescMatch) return -1
+              if (!aDescMatch && bDescMatch) return 1
+              
+              return new Date(b.date) - new Date(a.date)
+            })
+          }
+          return [...resources].sort((a, b) => parseFloat(b.rating) - parseFloat(a.rating))
+      }
+    },
+    
+    sortResources() {
+      this.currentPage = 1
+    },
+    
+    prevPage() {
+      if (this.currentPage > 1) {
+        this.currentPage--
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+      }
+    },
+    
+    nextPage() {
+      if (this.currentPage < this.totalPages) {
+        this.currentPage++
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+      }
+    },
+    
+    viewResourceDetail(resource) {
+      this.selectedResource = resource
+      history.pushState(null, null, `#${resource.id}`)
+    },
+    
+    scrollToResource(resourceId) {
+      const element = document.getElementById(`resource-${resourceId}`)
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' })
+        element.classList.add('highlight')
+        setTimeout(() => element.classList.remove('highlight'), 2000)
+      }
+    }
+  }
+}
+</script>
+
 <style scoped lang="scss">
 // Design System Variables
 $primary: #5E81F4;
@@ -199,7 +457,16 @@ $shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
 $shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
 $transition: all 0.25s ease;
 
+
+
+.desktop-only {
+  @media (max-width: 768px) {
+    display: none;
+  }
+}
 // Base Styles
+
+
 .resources-app {
   display: flex;
   flex-direction: column;
@@ -361,6 +628,49 @@ $transition: all 0.25s ease;
   position: relative;
   z-index: 2;
   width: 100%;
+}
+
+// Mobile Filter Toggle
+.mobile-filter-toggle {
+  display: none; /* Hidden by default */
+  background: $primary;
+  color: $white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  cursor: pointer;
+  transition: $transition;
+  align-items: center;
+  gap: 0.75rem;
+  
+  &:hover {
+    background: $primary-dark;
+  }
+  
+  i {
+    font-size: 1rem;
+  }
+}
+
+// Sidebar Overlay
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba($dark, 0.5);
+  z-index: 999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  
+  &.visible {
+    opacity: 1;
+    pointer-events: all;
+  }
 }
 
 // Sidebar Filters
@@ -729,11 +1039,25 @@ $transition: all 0.25s ease;
   }
   
   .sidebar-filters {
-    position: static;
-    flex: 0 0 auto;
-    width: 100%;
-    height: auto;
-    margin-bottom: 2rem;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 85%;
+    max-width: 350px;
+    height: 100vh;
+    z-index: 1000;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    box-shadow: $shadow-lg;
+    overflow-y: auto;
+    
+    &.mobile-visible {
+      transform: translateX(0);
+    }
+  }
+  
+  .mobile-filter-toggle {
+    display: flex;
   }
   
   .resources-hero {
@@ -774,6 +1098,7 @@ $transition: all 0.25s ease;
     overflow-x: auto;
     padding-bottom: 0.5rem;
     scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
     
     &::-webkit-scrollbar {
       display: none;
@@ -781,6 +1106,7 @@ $transition: all 0.25s ease;
     
     button {
       flex: 0 0 auto;
+      white-space: nowrap;
     }
   }
   
@@ -827,248 +1153,10 @@ $transition: all 0.25s ease;
       padding: 0.5rem 2rem 0.5rem 1rem;
     }
   }
-}
-</style>
-
-<script>
-import ResourceCard from '@/components/resources/ResourceCard.vue'
-import ResourceDetailModal from '@/components/resources/ResourceDetailModal.vue'
-import { fetchResources } from '@/services/resources.js'
-
-export default {
-  components: {
-    ResourceCard,
-    ResourceDetailModal
-  },
-  data() {
-    return {
-      resources: [],
-      loading: true,
-      filters: {
-        category: 'all',
-        type: 'all',
-        search: ''
-      },
-      categories: [
-        { id: 'all', name: 'All Categories' },
-        { id: 'depression', name: 'Depression' },
-        { id: 'anxiety', name: 'Anxiety' },
-        { id: 'stress', name: 'Stress' },
-        { id: 'ptsd', name: 'PTSD' },
-        { id: 'bipolar', name: 'Bipolar' },
-        { id: 'ocd', name: 'OCD' },
-        { id: 'adhd', name: 'ADHD' },
-        { id: 'eating-disorders', name: 'Eating Disorders' },
-        { id: 'addiction', name: 'Addiction' },
-        { id: 'sleep', name: 'Sleep Issues' },
-        { id: 'grief', name: 'Grief' }
-      ],
-      types: [
-        { id: 'all', name: 'All Types' },
-        { id: 'article', name: 'Articles' },
-        { id: 'video', name: 'Videos' },
-        { id: 'podcast', name: 'Podcasts' },
-        { id: 'tool', name: 'Tools' },
-        { id: 'app', name: 'Apps' },
-        { id: 'therapy', name: 'Therapy Options' },
-        { id: 'community', name: 'Communities' },
-        { id: 'book', name: 'Books' },
-        { id: 'course', name: 'Courses' }
-      ],
-      savedResources: JSON.parse(localStorage.getItem('savedResources')) || [],
-      sortBy: 'relevance',
-      currentPage: 1,
-      itemsPerPage: 12,
-      selectedResource: null,
-      searchTimeout: null,
-      gridView: true
-    }
-  },
-  computed: {
-    popularCategories() {
-      return [
-        { id: 'anxiety', name: 'Anxiety' },
-        { id: 'depression', name: 'Depression' },
-        { id: 'stress', name: 'Stress' },
-        { id: 'sleep', name: 'Sleep' }
-      ]
-    },
-    
-    filteredResources() {
-      let filtered = this.resources.filter(resource => {
-        const matchesCategory = this.filters.category === 'all' || 
-          resource.categories.includes(this.filters.category)
-        const matchesType = this.filters.type === 'all' || 
-          resource.type === this.filters.type
-        const matchesSearch = this.filters.search === '' || 
-          resource.title.toLowerCase().includes(this.filters.search.toLowerCase()) || 
-          resource.description.toLowerCase().includes(this.filters.search.toLowerCase()) ||
-          resource.author?.toLowerCase().includes(this.filters.search.toLowerCase())
-        
-        return matchesCategory && matchesType && matchesSearch
-      })
-
-      return this.applySorting(filtered)
-    },
-    
-    paginatedResources() {
-      const start = (this.currentPage - 1) * this.itemsPerPage
-      const end = start + this.itemsPerPage
-      return this.filteredResources.slice(start, end)
-    },
-    
-    totalPages() {
-      return Math.ceil(this.filteredResources.length / this.itemsPerPage)
-    }
-  },
-  watch: {
-    filters: {
-      handler() {
-        this.currentPage = 1
-      },
-      deep: true
-    }
-  },
-  async created() {
-    await this.fetchResourcesData()
-    if (this.$route.hash) {
-      this.scrollToResource(this.$route.hash.substring(1))
-    }
-  },
-  methods: {
-    async fetchResourcesData() {
-      this.loading = true
-      try {
-        this.resources = await fetchResources()
-        // Enhance resources with mock data for demo
-        this.resources = this.resources.map(resource => ({
-          ...resource,
-          date: resource.date || new Date(Date.now() - Math.floor(Math.random() * 1000 * 60 * 60 * 24 * 30 * 6)).toISOString(),
-          rating: resource.rating || (Math.random() * 2 + 3).toFixed(1),
-          categories: resource.categories || [this.categories[Math.floor(Math.random() * this.categories.length)].id]
-        }))
-      } catch (error) {
-        console.error('Error fetching resources:', error)
-        this.$toast.error('Failed to load resources. Please try again later.')
-      } finally {
-        this.loading = false
-      }
-    },
-    
-    handleSearch() {
-      clearTimeout(this.searchTimeout)
-      this.searchTimeout = setTimeout(() => {
-        this.currentPage = 1
-      }, 300)
-    },
-    
-    clearSearch() {
-      this.filters.search = ''
-      this.currentPage = 1
-    },
-    
-    setQuickFilter(categoryId) {
-      this.filters.category = categoryId
-      this.currentPage = 1
-    },
-    
-    getCategoryName(id) {
-      const category = this.categories.find(c => c.id === id)
-      return category ? category.name : ''
-    },
-    
-    resetFilters() {
-      this.filters = {
-        category: 'all',
-        type: 'all',
-        search: ''
-      }
-      this.sortBy = 'relevance'
-      this.currentPage = 1
-    },
-    
-    toggleSavedResource(resourceId) {
-      const index = this.savedResources.indexOf(resourceId)
-      if (index === -1) {
-        this.savedResources.push(resourceId)
-        this.$toast.success('Added to saved resources')
-      } else {
-        this.savedResources.splice(index, 1)
-        this.$toast.info('Removed from saved resources')
-      }
-      localStorage.setItem('savedResources', JSON.stringify(this.savedResources))
-    },
-    
-    isResourceSaved(resourceId) {
-      return this.savedResources.includes(resourceId)
-    },
-    
-    applySorting(resources) {
-      switch (this.sortBy) {
-        case 'newest':
-          return [...resources].sort((a, b) => new Date(b.date) - new Date(a.date))
-        case 'oldest':
-          return [...resources].sort((a, b) => new Date(a.date) - new Date(b.date))
-        case 'title-asc':
-          return [...resources].sort((a, b) => a.title.localeCompare(b.title))
-        case 'title-desc':
-          return [...resources].sort((a, b) => b.title.localeCompare(a.title))
-        case 'rating':
-          return [...resources].sort((a, b) => parseFloat(b.rating) - parseFloat(a.rating))
-        default:
-          if (this.filters.search) {
-            // Sort by relevance to search term
-            return [...resources].sort((a, b) => {
-              const aTitleMatch = a.title.toLowerCase().includes(this.filters.search.toLowerCase())
-              const bTitleMatch = b.title.toLowerCase().includes(this.filters.search.toLowerCase())
-              
-              if (aTitleMatch && !bTitleMatch) return -1
-              if (!aTitleMatch && bTitleMatch) return 1
-              
-              const aDescMatch = a.description.toLowerCase().includes(this.filters.search.toLowerCase())
-              const bDescMatch = b.description.toLowerCase().includes(this.filters.search.toLowerCase())
-              
-              if (aDescMatch && !bDescMatch) return -1
-              if (!aDescMatch && bDescMatch) return 1
-              
-              return new Date(b.date) - new Date(a.date)
-            })
-          }
-          return [...resources].sort((a, b) => parseFloat(b.rating) - parseFloat(a.rating))
-      }
-    },
-    
-    sortResources() {
-      this.currentPage = 1
-    },
-    
-    prevPage() {
-      if (this.currentPage > 1) {
-        this.currentPage--
-        window.scrollTo({ top: 0, behavior: 'smooth' })
-      }
-    },
-    
-    nextPage() {
-      if (this.currentPage < this.totalPages) {
-        this.currentPage++
-        window.scrollTo({ top: 0, behavior: 'smooth' })
-      }
-    },
-    
-    viewResourceDetail(resource) {
-      this.selectedResource = resource
-      history.pushState(null, null, `#${resource.id}`)
-    },
-    
-    scrollToResource(resourceId) {
-      const element = document.getElementById(`resource-${resourceId}`)
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' })
-        element.classList.add('highlight')
-        setTimeout(() => element.classList.remove('highlight'), 2000)
-      }
-    }
+  
+  .mobile-filter-toggle {
+    width: 100%;
+    justify-content: center;
   }
 }
-</script>
+</style>

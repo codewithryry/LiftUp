@@ -2,87 +2,106 @@ import { createRouter, createWebHistory } from 'vue-router'
 import store from '@/store'
 import { auth } from '@/firebase'
 import EmergencyResources from '@/components/common/EmergencyResources.vue'
+import Loading from '@/components/common/Loading.vue'
 
 const routes = [
   {
     path: '/',
     name: 'Home',
-    component: () => import(/* webpackChunkName: "home" */ '@/views/Home.vue'),
+    component: () => import('@/views/Home.vue'),
     meta: { 
       title: 'LiftUp - Mental Health Support',
-      requiresAuth: false 
+      requiresAuth: false,
+      showFooter: true,
+      showNavbar: true
     }
   },
   {
     path: '/resources',
     name: 'Resources',
-    component: () => import(/* webpackChunkName: "forum" */ '@/views/Resources.vue'),
+    component: () => import('@/views/Resources.vue'),
     meta: { 
       title: 'Mental Wellness Resources - LiftUp',
-      requiresAuth: true 
+      requiresAuth: false,
+      showFooter: true,
+      showNavbar: true
     }
   },
   {
     path: '/forum',
     name: 'Forum',
-    component: () => import(/* webpackChunkName: "forum" */ '@/views/Forum.vue'),
+    component: () => import('@/views/Forum.vue'),
     meta: { 
       title: 'Anonymous Forum - LiftUp',
-      requiresAuth: true 
+      requiresAuth: false,
+      showFooter: false,
+      showNavbar: true
     }
   },
   {
     path: '/self-care',
     name: 'SelfCare',
-    component: () => import(/* webpackChunkName: "selfcare" */ '@/views/SelfCare.vue'),
+    component: () => import('@/views/SelfCare.vue'),
     meta: { 
       title: 'Self-Care Tips - LiftUp',
-      requiresAuth: false 
+      requiresAuth: false,
+      showFooter: true,
+      showNavbar: true
     }
   },
   {
     path: '/about',
     name: 'About',
-    component: () => import(/* webpackChunkName: "about" */ '@/views/About.vue'),
+    component: () => import('@/views/About.vue'),
     meta: { 
       title: 'About LiftUp',
-      requiresAuth: false 
+      requiresAuth: false,
+      showFooter: true,
+      showNavbar: true
     }
   },
   {
     path: '/profile',
     name: 'Profile',
-    component: () => import(/* webpackChunkName: "profile" */ '@/views/Profile.vue'),
+    component: () => import('@/views/Profile.vue'),
     meta: { 
       title: 'Your Profile - LiftUp',
-      requiresAuth: true 
+      requiresAuth: true,
+      showFooter: true,
+      showNavbar: true
     }
   },
   {
     path: '/login',
     name: 'Login',
-    component: () => import(/* webpackChunkName: "auth" */ '@/components/auth/Login.vue'),
+    component: () => import('@/components/auth/Login.vue'),
     meta: { 
       title: 'Login - LiftUp',
-      requiresGuest: true 
+      requiresGuest: true,
+      showFooter: false,
+      showNavbar: false
     }
   },
   {
     path: '/register',
     name: 'Register',
-    component: () => import(/* webpackChunkName: "auth" */ '@/components/auth/Register.vue'),
+    component: () => import('@/components/auth/Register.vue'),
     meta: { 
       title: 'Register - LiftUp',
-      requiresGuest: true 
+      requiresGuest: true,
+      showFooter: false,
+      showNavbar: false
     }
   },
   {
     path: '/forgot-password',
     name: 'ForgotPassword',
-    component: () => import(/* webpackChunkName: "auth" */ '@/components/auth/ForgotPassword.vue'),
+    component: () => import('@/components/auth/ForgotPassword.vue'),
     meta: { 
       title: 'Forgot Password - LiftUp',
-      requiresGuest: true 
+      requiresGuest: true,
+      showFooter: false,
+      showNavbar: false
     }
   },
   {
@@ -91,13 +110,30 @@ const routes = [
     component: EmergencyResources,
     meta: { 
       title: 'Emergency Resources - LiftUp',
-      requiresAuth: false 
+      requiresAuth: false,
+      showFooter: true,
+      showNavbar: true
+    }
+  },
+  {
+    path: '/emergency/neura',
+    name: 'Neura',
+    component: () => import('@/views/NeuraAI.vue'),
+    meta: {
+      title: 'NeuraAI',
+      requiresAuth: false,
+      showFooter: false,
+      showNavbar: false
     }
   },
   {
     path: '/:pathMatch(.*)*',
     name: 'NotFound',
-    redirect: '/'
+    redirect: '/',
+    meta: { 
+      showFooter: true,
+      showNavbar: true
+    }
   }
 ]
 
@@ -113,14 +149,23 @@ const router = createRouter({
   }
 })
 
-// Update page title
-router.beforeEach((to) => {
-  document.title = to.meta.title || 'LiftUp - Mental Health Support'
-})
+// Loading state management
+let isLoading = false
+let loadingInstance = null
 
-// Auth guard with Firebase integration
 router.beforeEach(async (to, from, next) => {
-  // Wait for Firebase to initialize
+  if (!isLoading) {
+    isLoading = true
+    const app = document.getElementById('app')
+    loadingInstance = document.createElement('div')
+    loadingInstance.id = 'router-loading'
+    app.appendChild(loadingInstance)
+    const { createApp } = await import('vue')
+    createApp(Loading).mount('#router-loading')
+  }
+
+  document.title = to.meta.title || 'LiftUp - Mental Health Support'
+
   await new Promise((resolve) => {
     const unsubscribe = auth.onAuthStateChanged(() => {
       resolve()
@@ -130,11 +175,9 @@ router.beforeEach(async (to, from, next) => {
 
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
   const requiresGuest = to.matched.some(record => record.meta.requiresGuest)
-  
   const currentUser = auth.currentUser
   const isAuthenticated = currentUser !== null
 
-  // Update store with current auth state
   if (isAuthenticated) {
     store.commit('SET_USER', {
       uid: currentUser.uid,
@@ -156,6 +199,19 @@ router.beforeEach(async (to, from, next) => {
     next('/')
   } else {
     next()
+  }
+})
+
+router.afterEach(() => {
+  if (isLoading && loadingInstance) {
+    setTimeout(() => {
+      const loadingElement = document.getElementById('router-loading')
+      if (loadingElement) {
+        loadingElement.remove()
+      }
+      isLoading = false
+      loadingInstance = null
+    }, 300)
   }
 })
 

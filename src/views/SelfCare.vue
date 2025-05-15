@@ -19,22 +19,37 @@
             </button>
           </div>
           
-          <div class="quick-filters">
-            <button 
-              v-for="category in popularCategories" 
-              :key="category.id"
-              @click="setQuickFilter(category.id)"
-              :class="{ active: filters.category === category.id }"
-            >
-              {{ category.name }}
-            </button>
+          <div class="desktop-only">
+            <div class="quick-filters">
+              <button 
+                v-for="category in popularCategories" 
+                :key="category.id"
+                @click="setQuickFilter(category.id)"
+                :class="{ active: filters.category === category.id || (category.id === 'quick' && filters.duration === 'under5') }"
+              >
+                {{ category.name }}
+              </button>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
     <div class="main-container">
-      <aside class="sidebar-filters">
+      <!-- Mobile filter toggle button -->
+      <button class="mobile-filter-toggle" @click="showMobileFilters = !showMobileFilters">
+        <i class="fas fa-filter"></i>
+        {{ showMobileFilters ? 'Hide Filters' : 'Show Filters' }}
+      </button>
+      
+      <!-- Overlay that appears when filters are visible on mobile -->
+      <div 
+        class="sidebar-overlay" 
+        :class="{ visible: showMobileFilters }"
+        @click="showMobileFilters = false"
+      ></div>
+
+      <aside class="sidebar-filters" :class="{ 'mobile-visible': showMobileFilters }">
         <div class="filter-section">
           <h3>Filter Resources</h3>
           
@@ -244,25 +259,23 @@ export default {
         { id: '15to30', name: '15-30 mins' },
         { id: 'over30', name: '30+ mins' }
       ],
+      popularCategories: [
+        { id: 'mindfulness', name: 'Mindfulness' },
+        { id: 'physical', name: 'Physical' },
+        { id: 'emotional', name: 'Emotional' },
+        { id: 'quick', name: 'Quick Practices' }
+      ],
       savedResources: JSON.parse(localStorage.getItem('savedSelfCareResources')) || [],
       sortBy: 'relevance',
       currentPage: 1,
       itemsPerPage: 12,
       selectedResource: null,
       searchTimeout: null,
-      gridView: true
+      gridView: true,
+      showMobileFilters: false
     }
   },
   computed: {
-    popularCategories() {
-      return [
-        { id: 'mindfulness', name: 'Mindfulness' },
-        { id: 'physical', name: 'Physical' },
-        { id: 'emotional', name: 'Emotional' },
-        { id: 'quick', name: 'Quick Practices' }
-      ]
-    },
-    
     filteredResources() {
       let filtered = this.resources.filter(resource => {
         const matchesCategory = this.filters.category === 'all' || 
@@ -625,6 +638,49 @@ $transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   position: relative;
   z-index: 2;
   width: 100%;
+}
+
+// Mobile Filter Toggle
+.mobile-filter-toggle {
+  display: none; /* Hidden by default */
+  background: $primary;
+  color: $white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  cursor: pointer;
+  transition: $transition;
+  align-items: center;
+  gap: 0.75rem;
+  
+  &:hover {
+    background: $primary-dark;
+  }
+  
+  i {
+    font-size: 1rem;
+  }
+}
+
+// Sidebar Overlay
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba($dark, 0.5);
+  z-index: 999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  
+  &.visible {
+    opacity: 1;
+    pointer-events: all;
+  }
 }
 
 // Sidebar Filters
@@ -993,11 +1049,25 @@ $transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   }
   
   .sidebar-filters {
-    position: static;
-    flex: 0 0 auto;
-    width: 100%;
-    height: auto;
-    margin-bottom: 2rem;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 85%;
+    max-width: 350px;
+    height: 100vh;
+    z-index: 1000;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    box-shadow: $shadow-lg;
+    overflow-y: auto;
+    
+    &.mobile-visible {
+      transform: translateX(0);
+    }
+  }
+  
+  .mobile-filter-toggle {
+    display: flex;
   }
   
   .self-care-hero {
@@ -1010,6 +1080,10 @@ $transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 @media (max-width: 768px) {
+  .desktop-only {
+    display: none;
+  }
+
   .self-care-hero {
     padding: 2.5rem 1rem 3.5rem;
     
@@ -1030,21 +1104,6 @@ $transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     .sort-controls {
       justify-content: space-between;
       width: 100%;
-    }
-  }
-  
-  .quick-filters {
-    justify-content: flex-start;
-    overflow-x: auto;
-    padding-bottom: 0.5rem;
-    scrollbar-width: none;
-    
-    &::-webkit-scrollbar {
-      display: none;
-    }
-    
-    button {
-      flex: 0 0 auto;
     }
   }
   
@@ -1090,6 +1149,11 @@ $transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
       min-width: 150px;
       padding: 0.5rem 2rem 0.5rem 1rem;
     }
+  }
+  
+  .mobile-filter-toggle {
+    width: 100%;
+    justify-content: center;
   }
 }
 </style>
