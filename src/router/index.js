@@ -117,10 +117,21 @@ const routes = [
   },
   {
     path: '/emergency/neura',
-    name: 'Neura',
+    name: 'NeuraAI', // Unique name
     component: () => import('@/views/NeuraAI.vue'),
     meta: {
       title: 'NeuraAI',
+      requiresAuth: false,
+      showFooter: false,
+      showNavbar: false
+    }
+  },
+  {
+    path: '/emergency/findtherapist',
+    name: 'FindTherapist', // Unique name
+    component: () => import('@/views/Thefinder.vue'),
+    meta: {
+      title: 'Finder Therapist',
       requiresAuth: false,
       showFooter: false,
       showNavbar: false

@@ -1,4 +1,12 @@
-@import 'variables';
+@use 'variables' as vars;
+@use 'sass:color';
+
+// Update variable references
+body {
+  font-family: vars.$font-family-sans-serif;
+  color: vars.$dark;
+}
+
 
 // Colors
 $primary: #1976d2; // Example primary color (blue)

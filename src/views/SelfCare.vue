@@ -457,7 +457,7 @@ export default {
 
 <style scoped lang="scss">
 // Design System Variables
-$primary: #8E6C88;
+
 $primary-light: #F0E6EF;
 $primary-dark: #6A4D67;
 $secondary: #E3B5A4;

@@ -214,50 +214,6 @@ export default createStore({
         throw error
       }
     },
-    async fetchSavedResources({ commit }) {
-      try {
-        const resources = await fetchSavedResources()
-        commit('SET_SAVED_RESOURCES', resources)
-        return resources
-      } catch (error) {
-        throw error
-      }
-    },
-    async toggleSavedResource({ commit }, resourceId) {
-      try {
-        await toggleSavedResource(resourceId)
-        commit('TOGGLE_SAVED_RESOURCE', resourceId)
-      } catch (error) {
-        throw error
-      }
-    },
-    async fetchSelfCareTips({ commit }) {
-      try {
-        const tips = await fetchSelfCareTips()
-        commit('SET_SELF_CARE_TIPS', tips)
-        return tips
-      } catch (error) {
-        throw error
-      }
-    },
-    async saveSelfCareActivity({ commit }, activityData) {
-      try {
-        const activity = await saveSelfCareActivity(activityData)
-        commit('ADD_ACTIVITY', activity)
-        return activity
-      } catch (error) {
-        throw error
-      }
-    },
-    async fetchActivityHistory({ commit }) {
-      try {
-        const activities = await fetchActivityHistory()
-        commit('SET_ACTIVITY_HISTORY', activities)
-        return activities
-      } catch (error) {
-        throw error
-      }
-    },
     async fetchUserStats({ commit }) {
       try {
         const stats = await fetchUserStats()
@@ -275,9 +231,6 @@ export default createStore({
     userPosts: state => state.userPosts,
     currentPost: state => state.currentPost,
     resources: state => state.resources,
-    savedResources: state => state.savedResources,
-    selfCareTips: state => state.selfCareTips,
-    activityHistory: state => state.activityHistory,
     userStats: state => state.userStats
   }
 })

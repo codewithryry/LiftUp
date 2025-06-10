@@ -196,7 +196,7 @@ export default {
 
     findTherapist() {
       // Implementation for therapist finder
-      console.log("Finding therapist");
+     this.$router.push('/emergency/findtherapist');
     }
   }
 }

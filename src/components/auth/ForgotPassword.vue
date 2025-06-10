@@ -1,3 +1,4 @@
+<!-- src/components/PasswordReset.vue -->
 <template>
   <div class="auth-container">
     <div class="auth-card">
@@ -117,16 +118,32 @@ export default {
   align-items: center;
   min-height: 100vh;
   padding: 20px;
-  background-color: #f8fafc;
+  background-image: url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c');
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.auth-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay for readability */
+  z-index: 1;
 }
 
 .auth-card {
   width: 100%;
   max-width: 420px;
   padding: 2.5rem;
-  background: white;
+  background: rgba(255, 255, 255, 0.95); /* Slightly transparent white for contrast */
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  position: relative;
+  z-index: 2; /* Ensure card is above overlay */
 }
 
 .auth-header {
@@ -194,6 +211,7 @@ input {
   border-radius: 8px;
   font-size: 0.95rem;
   transition: border-color 0.2s;
+  background: white; /* Ensure input is fully opaque */
 }
 
 input:focus {
