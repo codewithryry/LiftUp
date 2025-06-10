@@ -86,41 +86,324 @@
           <p><i class="fas fa-info-circle"></i> Neura provides supportive listening but is not a substitute for professional care.</p>
         </div>
       </div>
+
       <!-- Info Modal -->
-      <div class="modal-overlay" v-if="showInfoModal" @click="showInfoModal = false">
-        <div class="modal-content" @click.stop>
-          <div class="modal-header">
-            <h3>About Neura AI</h3>
-            <button class="modal-close" @click="showInfoModal = false">
-              <i class="fas fa-times"></i>
-            </button>
-          </div>
-          <div class="modal-body">
-            <p>Neura AI is your mental health companion designed to provide supportive listening and guidance.</p>
-            <p class=""><i class=""></i> Neura is not a substitute for professional medical advice or treatment.</p>
+      <transition name="modal-fade">
+        <div class="modal-overlay" v-if="showInfoModal" @click="showInfoModal = false">
+          <div class="modal-content" @click.stop>
+            <div class="modal-header">
+              <div class="modal-icon">
+                <img src="https://cdn-icons-png.flaticon.com/512/4712/4712139.png" alt="Neura AI" class="chat-logo">
+              </div>
+              <h3>About Neura AI</h3>
+              <button class="modal-close" @click="showInfoModal = false">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="feature-item">
+                <i class="fas fa-heart"></i>
+                <p>Your compassionate mental health companion</p>
+              </div>
+              <div class="feature-item">
+                <i class="fas fa-comments"></i>
+                <p>Provides supportive listening and guidance</p>
+              </div>
+              <div class="feature-item">
+                <i class="fas fa-shield-alt"></i>
+                <p>Private and secure conversations</p>
+              </div>
+              <div class="disclaimer-note">
+                <i class="fas fa-exclamation-triangle"></i>
+                <p>Neura is not a substitute for professional medical advice, diagnosis, or treatment.</p>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button class="modal-action-btn" @click="showInfoModal = false">
+                Got it
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      </transition>
 
       <!-- Voice WIP Modal -->
-      <div class="modal-overlay" v-if="showVoiceModal" @click="showVoiceModal = false">
-        <div class="modal-content" @click.stop>
-          <div class="modal-header">
-            <h3>Voice Input</h3>
-            <button class="modal-close" @click="showVoiceModal = false">
-              <i class="fas fa-times"></i>
-            </button>
-          </div>
-          <div class="modal-body">
-            <p>Voice input is currently under development. Please use text input for now.</p>
+      <transition name="modal-fade">
+        <div class="modal-overlay" v-if="showVoiceModal" @click="showVoiceModal = false">
+          <div class="modal-content voice-modal" @click.stop>
+            <div class="modal-header">
+              <div class="modal-icon voice-icon">
+                <i class="fas fa-microphone"></i>
+              </div>
+              <h3>Voice Input</h3>
+              <button class="modal-close" @click="showVoiceModal = false">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="voice-wave">
+                <div class="wave-bar"></div>
+                <div class="wave-bar"></div>
+                <div class="wave-bar"></div>
+                <div class="wave-bar"></div>
+                <div class="wave-bar"></div>
+              </div>
+              <p class="voice-instruction">Voice input is coming soon! We're working hard to implement this feature.</p>
+              <p class="voice-note">For now, please use text input to chat with Neura.</p>
+            </div>
+            <div class="modal-footer">
+              <button class="modal-action-btn primary" @click="showVoiceModal = false">
+                Continue with text
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      </transition>
     </div>
   </div>
 </template>
 
 <style scoped>
+.neura-chat-container {
+  --primary: #6C5CE7;
+  --primary-light: #A29BFE;
+  --primary-dark: #5649C0;
+  --secondary: #00CEC9;
+  --accent: #FD79A8;
+  --danger: #FF7675;
+  --success: #00B894;
+  --text: #2D3436;
+  --text-light: #636E72;
+  --bg: #F5F6FA;
+  --card-bg: #FFFFFF;
+  --shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.15);
+  --transition: all 0.3s ease;
+
+  display: flex;
+  height: 100vh;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  overflow: hidden;
+  background-color: var(--bg);
+}
+
+/* Modal transitions */
+.modal-fade-enter-active,
+.modal-fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.modal-fade-enter-from,
+.modal-fade-leave-to {
+  opacity: 0;
+}
+
+/* Modern Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+}
+
+.modal-content {
+  background-color: var(--card-bg);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 400px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  transform: translateY(0);
+  animation: modalSlideUp 0.4s ease;
+}
+
+.voice-modal {
+  max-width: 380px;
+}
+
+@keyframes modalSlideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.modal-header {
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.modal-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+  color: var(--primary);
+  font-size: 1.2rem;
+}
+
+.voice-icon {
+  background-color: rgba(0, 206, 201, 0.1);
+  color: var(--secondary);
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: var(--text);
+  flex: 1;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  color: var(--text-light);
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 4px;
+  transition: var(--transition);
+}
+
+.modal-close:hover {
+  color: var(--text);
+}
+
+.modal-body {
+  padding: 20px;
+}
+
+.feature-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.feature-item i {
+  color: var(--primary);
+  font-size: 1.1rem;
+  margin-top: 2px;
+}
+
+.feature-item p {
+  margin: 0;
+  color: var(--text);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.disclaimer-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: 20px;
+  padding: 12px;
+  background-color: rgba(255, 118, 117, 0.08);
+  border-radius: 8px;
+}
+
+.disclaimer-note i {
+  color: var(--danger);
+  font-size: 1.1rem;
+  margin-top: 2px;
+}
+
+.disclaimer-note p {
+  margin: 0;
+  color: var(--text);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.modal-footer {
+  padding: 16px 20px;
+  display: flex;
+  justify-content: flex-end;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.modal-action-btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  background-color: var(--bg);
+  border: none;
+  color: var(--text);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.modal-action-btn.primary {
+  background-color: var(--primary);
+  color: white;
+}
+
+.modal-action-btn:hover {
+  opacity: 0.9;
+}
+
+/* Voice Modal Specific Styles */
+.voice-wave {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 60px;
+  margin: 20px 0;
+}
+
+.wave-bar {
+  width: 6px;
+  height: 30px;
+  background-color: var(--secondary);
+  border-radius: 3px;
+  animation: waveAnimation 1.4s infinite ease-in-out;
+}
+
+.wave-bar:nth-child(1) { animation-delay: 0s; height: 20px; }
+.wave-bar:nth-child(2) { animation-delay: 0.2s; height: 40px; }
+.wave-bar:nth-child(3) { animation-delay: 0.4s; height: 60px; }
+.wave-bar:nth-child(4) { animation-delay: 0.6s; height: 40px; }
+.wave-bar:nth-child(5) { animation-delay: 0.8s; height: 20px; }
+
+@keyframes waveAnimation {
+  0%, 100% { height: 20px; }
+  50% { height: 60px; }
+}
+
+.voice-instruction {
+  text-align: center;
+  font-size: 1rem;
+  color: var(--text);
+  margin: 20px 0 10px;
+  font-weight: 500;
+}
+
+.voice-note {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--text-light);
+  margin: 0;
+}
 .neura-chat-container {
   --primary: #6C5CE7;
   --primary-light: #A29BFE;
@@ -904,6 +1187,7 @@ export default {
             temperature: 0.7,
             preamble: `You are Neura, a compassionate mental health assistant. 
                       Respond with empathy, support, and professional insight. 
+                      Keep responses clear and avoid markdown formatting. 
                       If the user is in crisis, gently suggest contacting professional help.`,
           }),
         });
@@ -913,9 +1197,11 @@ export default {
         }
 
         const data = await response.json();
+        // Clean up the response by removing any markdown formatting
+        const cleanText = data.text.replace(/\*\*/g, '').replace(/\*/g, '');
         this.messages.push({
           sender: 'neura',
-          text: data.text,
+          text: cleanText,
           time: this.getCurrentTime(),
         });
       } catch (error) {
