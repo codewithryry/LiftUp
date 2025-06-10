@@ -1,26 +1,19 @@
+// Colors
 $primary: #3498db;
 $secondary: #2ecc71;
-$success: #27ae60;
-$warning: #f1c40f;
 $danger: #e74c3c;
+$warning: #f39c12;
+$info: #1abc9c;
+$light: #ecf0f1;
 $dark: #2c3e50;
-$gray: #7f8c8d;
-$gray-light: #ecf0f1;
-$white: #ffffff;
-$black: #000000;
-
-// Typography
-$font-family-sans-serif: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+$gray: #95a5a6;
 
 // Breakpoints
-$breakpoints: (
-  xs: 0,
-  sm: 576px,
-  md: 768px,
-  lg: 992px,
-  xl: 1200px,
-  xxl: 1400px
-);
+$breakpoint-xs: 0;
+$breakpoint-sm: 576px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 992px;
+$breakpoint-xl: 1200px;
 
 // Spacing
 $spacer: 1rem;
@@ -33,14 +26,25 @@ $spacers: (
   5: $spacer * 3
 );
 
-// Border radius
+// Typography
+$font-family-sans-serif: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+$font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+$font-size-base: 1rem;
+$line-height-base: 1.6;
+
+// Borders
+$border-width: 1px;
+$border-color: #dee2e6;
 $border-radius: 0.25rem;
+$border-radius-lg: 0.3rem;
+$border-radius-sm: 0.2rem;
 
 // Shadows
-$shadow-sm: 0 0.125rem 0.25rem rgba($black, 0.075);
-$shadow-md: 0 0.25rem 0.5rem rgba($black, 0.15);
-$shadow-lg: 0 0.5rem 1rem rgba($black, 0.175);
+$box-shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+$box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+$box-shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.175);
 
 // Transitions
-$transition-base: all 0.2s ease-in-out;
-$transition-transform: transform 0.2s ease-in-out;
+$transition-base: all 0.3s ease-in-out;
+$transition-fade: opacity 0.15s linear;
+$transition-collapse: height 0.35s ease;

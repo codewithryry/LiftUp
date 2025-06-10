@@ -12,20 +12,25 @@
           </svg>
           <span class="logo-text">
             <span class="logo-main">LIFTUP</span>
+            <span class="logo-badge">Beta</span>
           </span>
         </router-link>
         
         <div class="mobile-menu-toggle" @click="toggleMobileMenu">
-          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg v-if="!mobileMenuOpen" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M3 12H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             <path d="M3 6H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             <path d="M3 18H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
+          <svg v-else viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M6 18L18 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
         </div>
                 
-        <div class="nav-links" :class="{ 'mobile-active': mobileMenuOpen }">
+        <div class="nav-links" :class="{ 'mobile-active': mobileMenuOpen }" ref="navLinks">
           <div class="main-links">
-            <router-link to="/resources" class="nav-link">
+            <router-link to="/resources" class="nav-link" @click="closeMobileMenu">
               <svg class="nav-icon" viewBox="0 0 24 24" fill="none">
                 <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -33,20 +38,20 @@
               </svg>
               <span>Resources</span>
             </router-link>
-            <router-link to="/self-care" class="nav-link self-care-link">
+            <router-link to="/self-care" class="nav-link self-care-link" @click="closeMobileMenu">
               <svg class="nav-icon" viewBox="0 0 24 24" fill="none">
                 <path d="M22 12H18L15 21L9 3L6 12H2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
               <span>Self-Care</span>
-              <span class="self-care-badge">New</span>
+              <!-- <span class="self-care-badge">New</span> -->
             </router-link>
-            <router-link to="/forum" class="nav-link">
+            <router-link to="/forum" class="nav-link" @click="closeMobileMenu">
               <svg class="nav-icon" viewBox="0 0 24 24" fill="none">
                 <path d="M21 15C21 15.5304 20.7893 16.0391 20.4142 16.4142C20.0391 16.7893 19.5304 17 19 17H7L3 21V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V15Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
               <span>Forum</span>
             </router-link>
-            <router-link to="/about" class="nav-link">
+            <router-link to="/about" class="nav-link" @click="closeMobileMenu">
               <svg class="nav-icon" viewBox="0 0 24 24" fill="none">
                 <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 <path d="M12 16V12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -54,7 +59,7 @@
               </svg>
               <span>About</span>
             </router-link>
-            <router-link to="/emergency" class="nav-link emergency-link">
+            <router-link to="/emergency" class="nav-link emergency-link" @click="closeMobileMenu">
               <svg class="nav-icon" viewBox="0 0 24 24" fill="none">
                 <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 <path d="M12 8V12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -67,7 +72,7 @@
           
           <div class="auth-section">
             <div class="profile-section" v-if="isAuthenticated">
-              <router-link to="/profile" class="profile-link">
+              <router-link to="/profile" class="profile-link" @click="closeMobileMenu">
                 <template v-if="!avatarError && userPhotoUrl">
                   <img 
                     :src="userPhotoUrl" 
@@ -86,12 +91,11 @@
               </router-link>
             </div>
             
-            
             <div class="auth-buttons" v-if="!isAuthenticated">
-              <router-link to="/login" class="btn btn-outline">
+              <router-link to="/login" class="btn btn-outline" @click="closeMobileMenu">
                 <span>Login</span>
               </router-link>
-              <router-link to="/register" class="btn btn-primary">
+              <router-link to="/register" class="btn btn-primary" @click="closeMobileMenu">
                 <span>Register</span>
               </router-link>
             </div>
@@ -148,7 +152,6 @@ export default {
       const auth = getAuth()
       const user = auth.currentUser
       
-      // Check for provider photos first
       if (user?.providerData?.length) {
         const googleProvider = user.providerData.find(
           provider => provider.providerId === 'google.com'
@@ -158,7 +161,6 @@ export default {
           return googleProvider.photoURL.replace(/=s\d+(-c)?$/, '=s400-c')
         }
         
-        // Check for other providers (Facebook, etc.)
         const providerWithPhoto = user.providerData.find(
           provider => provider.photoURL
         )
@@ -168,13 +170,11 @@ export default {
         }
       }
       
-      // Check for Firebase auth photo
       if (user?.photoURL) {
         this.isUsingProviderPhoto = true
         return user.photoURL
       }
       
-      // Fallback to stored avatar or default
       this.isUsingProviderPhoto = false
       return this.user?.avatar || this.defaultAvatarUrl
     },
@@ -192,6 +192,7 @@ export default {
         await auth.signOut()
         this.user = null
         this.$router.push('/login')
+        this.closeMobileMenu()
       } catch (error) {
         console.error('Logout failed:', error)
         alert('Logout failed. Please try again.')
@@ -199,9 +200,11 @@ export default {
     },
     toggleMobileMenu() {
       this.mobileMenuOpen = !this.mobileMenuOpen
+      document.body.style.overflow = this.mobileMenuOpen ? 'hidden' : 'auto'
     },
     closeMobileMenu() {
       this.mobileMenuOpen = false
+      document.body.style.overflow = 'auto'
     }
   },
   watch: {
@@ -211,36 +214,6 @@ export default {
   }
 }
 </script>
-
-
-<style scoped>
-.avatar {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid rgba(124, 58, 237, 0.2);
-}
-
-.avatar.initials {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, #7C3AED 0%, #5B21B6 100%);
-  color: white;
-  font-weight: bold;
-  font-size: 16px;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .avatar, .avatar.initials {
-    width: 44px;
-    height: 44px;
-    font-size: 18px;
-  }
-}
-</style>
 
 <style scoped>
 /* Base Styles */
@@ -257,64 +230,15 @@ export default {
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 16px;
 }
 
 .navbar-content {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 72px;
+  height: 64px;
   position: relative;
-}
-
-/* Neura Chat Badge */
-.neura-badge {
-  position: absolute;
-  top: -6px;
-  right: -6px;
-  background: #3B82F6;
-  color: white;
-  font-size: 0.6rem;
-  font-weight: 700;
-  padding: 2px 6px;
-  border-radius: 999px;
-  animation: pulse 2s infinite;
-}
-
-/* Emergency Link */
-.emergency-link {
-  color: #EF4444;
-  position: relative;
-}
-
-.emergency-link .nav-icon {
-  color: currentColor;
-}
-
-.emergency-link:hover {
-  color: #DC2626;
-  background: rgba(239, 68, 68, 0.05);
-}
-
-.emergency-link.router-link-exact-active {
-  color: #DC2626;
-  font-weight: 600;
-}
-
-.emergency-link.router-link-exact-active::after {
-  background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
-}
-
-/* ... (rest of the styles remain the same) ... */
-
-@media (max-width: 768px) {
-  /* ... (previous mobile styles remain the same) ... */
-  
-  .neura-badge {
-    top: -4px;
-    right: -4px;
-  }
 }
 
 /* Logo Styles */
@@ -326,59 +250,20 @@ export default {
 }
 
 .logo-icon {
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   color: #7C3AED;
-  margin-right: 12px;
-}
-
-.logo-text {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.2;
-}
-
-.logo-main {
-  font-size: 1.5rem;
-  font-weight: 800;
-  background: linear-gradient(135deg, #7C3AED 0%, #5B21B6 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-.logo-sub {
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: #6b7280;
-  letter-spacing: 0.5px;
-}
-
-
-/* Logo Badge */
-.logo-badge {
-  position: absolute;
-  top: -6px;
-  right: -6px;
-  background: linear-gradient(135deg, #7C3AED 0%, #5B21B6 100%);
-  color: white;
-  font-size: 0.6rem;
-  font-weight: 700;
-  padding: 2px 6px;
-  border-radius: 999px;
-  white-space: nowrap;
-  transform: translateX(50%) translateY(-50%);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-right: 10px;
 }
 
 .logo-text {
   display: flex;
   position: relative;
-  line-height: 1.2;
+  align-items: center;
 }
 
 .logo-main {
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   font-weight: 800;
   background: linear-gradient(135deg, #7C3AED 0%, #5B21B6 100%);
   -webkit-background-clip: text;
@@ -386,19 +271,19 @@ export default {
   color: transparent;
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .logo-badge {
-    font-size: 0.5rem;
-    padding: 2px 4px;
-  }
-}
-
-@media (max-width: 480px) {
-  .logo-badge {
-    font-size: 0.4rem;
-    padding: 1px 3px;
-  }
+.logo-badge {
+  position: absolute;
+  top: -4px;
+  right: -20px;
+  background: linear-gradient(135deg, #7C3AED 0%, #5B21B6 100%);
+  color: white;
+  font-size: 0.55rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 999px;
+  white-space: nowrap;
+  transform: translateX(50%);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 /* Mobile Menu Toggle */
@@ -412,19 +297,24 @@ export default {
   width: 24px;
   height: 24px;
   color: #2c3e50;
+  transition: transform 0.3s ease;
+}
+
+.mobile-menu-toggle svg:hover {
+  transform: scale(1.1);
 }
 
 /* Navigation Links */
 .nav-links {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 16px;
   transition: all 0.3s ease;
 }
 
 .main-links {
   display: flex;
-  gap: 16px;
+  gap: 12px;
 }
 
 .nav-link {
@@ -434,15 +324,15 @@ export default {
   text-decoration: none;
   color: #4b5563;
   font-weight: 500;
-  padding: 10px 14px;
-  border-radius: 8px;
+  padding: 8px 12px;
+  border-radius: 6px;
   transition: all 0.3s ease;
   position: relative;
 }
 
 .nav-icon {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   color: currentColor;
   flex-shrink: 0;
 }
@@ -460,19 +350,19 @@ export default {
 .nav-link.router-link-exact-active::after {
   content: '';
   position: absolute;
-  bottom: -4px;
+  bottom: -3px;
   left: 50%;
   transform: translateX(-50%);
-  width: 20px;
-  height: 3px;
+  width: 16px;
+  height: 2px;
   background: linear-gradient(135deg, #7C3AED 0%, #5B21B6 100%);
-  border-radius: 3px;
+  border-radius: 2px;
 }
 
-/* Self-Care Link */
+/* Self-Care Link
 .self-care-link {
   position: relative;
-  color: #EC4899;
+
 }
 
 .self-care-link .nav-icon {
@@ -494,26 +384,21 @@ export default {
 
 .self-care-badge {
   position: absolute;
-  top: -6px;
-  right: -6px;
+  top: -4px;
+  right: -4px;
   background: #EC4899;
   color: white;
-  font-size: 0.6rem;
+  font-size: 0.55rem;
   font-weight: 700;
-  padding: 2px 6px;
+  padding: 2px 5px;
   border-radius: 999px;
   animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.1); }
-  100% { transform: scale(1); }
-}
+} */
 
 /* Emergency Link */
 .emergency-link {
   color: #EF4444;
+  position: relative;
 }
 
 .emergency-link .nav-icon {
@@ -534,13 +419,32 @@ export default {
   background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
 }
 
+.neura-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: #3B82F6;
+  color: white;
+  font-size: 0.55rem;
+  font-weight: 700;
+  padding: 2px 5px;
+  border-radius: 999px;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
 /* Auth Section */
 .auth-section {
   display: flex;
   align-items: center;
-  gap: 16px;
-  margin-left: 16px;
-  padding-left: 16px;
+  gap: 12px;
+  margin-left: 12px;
+  padding-left: 12px;
   border-left: 1px solid rgba(0, 0, 0, 0.1);
 }
 
@@ -552,12 +456,12 @@ export default {
 .profile-link {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   text-decoration: none;
   color: #2c3e50;
   transition: all 0.3s ease;
-  padding: 8px 12px;
-  border-radius: 8px;
+  padding: 6px 10px;
+  border-radius: 6px;
 }
 
 .profile-link:hover {
@@ -571,41 +475,51 @@ export default {
 
 .username {
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   line-height: 1.2;
   color: #1f2937;
 }
 
 .profile-text {
   font-weight: 500;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: #6b7280;
 }
 
 .avatar {
-  width: 42px;
-  height: 42px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid rgba(124, 58, 237, 0.2);
 }
 
+.avatar.initials {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #7C3AED 0%, #5B21B6 100%);
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
+}
+
 /* Auth Buttons */
 .auth-buttons {
   display: flex;
-  gap: 12px;
+  gap: 10px;
 }
 
 .btn {
-  padding: 10px 18px;
-  border-radius: 8px;
-  font-size: 0.9rem;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 0.85rem;
   font-weight: 600;
   text-decoration: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 6px;
   transition: all 0.3s ease;
   white-space: nowrap;
 }
@@ -628,8 +542,8 @@ export default {
 
 .btn-primary:hover {
   background: linear-gradient(135deg, #6D28D9 0%, #4C1D95 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.2);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(124, 58, 237, 0.2);
 }
 
 /* Logout Button */
@@ -637,13 +551,13 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 6px;
   background: rgba(239, 68, 68, 0.1);
   border: 1px solid rgba(239, 68, 68, 0.3);
   color: #EF4444;
-  padding: 10px 18px;
-  border-radius: 8px;
-  font-size: 0.9rem;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -656,8 +570,8 @@ export default {
 }
 
 .logout-icon {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
 }
 
 .logout-text {
@@ -666,35 +580,42 @@ export default {
 
 /* Responsive Styles */
 @media (max-width: 768px) {
+  .navbar-content {
+    height: 56px;
+  }
+
   .mobile-menu-toggle {
     display: block;
   }
   
   .nav-links {
     position: fixed;
-    top: 72px;
+    top: 56px;
     left: 0;
     width: 100%;
+    height: calc(100vh - 56px);
     background: white;
     flex-direction: column;
     align-items: flex-start;
-    padding: 20px;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-    transform: translateY(-150%);
+    padding: 16px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    transform: translateY(-100%);
     opacity: 0;
-    z-index: 1000;
-    gap: 12px;
+    pointer-events: none;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    overflow-y: auto;
   }
   
   .nav-links.mobile-active {
     transform: translateY(0);
     opacity: 1;
+    pointer-events: auto;
   }
   
   .main-links {
     flex-direction: column;
     width: 100%;
-    gap: 8px;
+    gap: 4px;
     order: 1;
   }
   
@@ -702,11 +623,11 @@ export default {
     order: 2;
     flex-direction: column;
     width: 100%;
-    gap: 16px;
+    gap: 12px;
     border-left: none;
     padding-left: 0;
     margin-left: 0;
-    padding-top: 16px;
+    padding-top: 12px;
     border-top: 1px solid rgba(0, 0, 0, 0.1);
     align-items: flex-start;
   }
@@ -717,49 +638,51 @@ export default {
   
   .profile-link {
     width: 100%;
-    padding: 12px;
+    padding: 10px;
   }
   
   .avatar {
-    width: 44px;
-    height: 44px;
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
   }
   
   .username {
-    font-size: 1rem;
+    font-size: 0.95rem;
   }
   
   .auth-buttons {
     width: 100%;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
   }
   
   .btn, .logout-btn {
     width: 100%;
     justify-content: center;
-    padding: 14px;
+    padding: 12px;
   }
   
   .logout-btn {
     background: rgba(239, 68, 68, 0.05);
     border: 1px solid rgba(239, 68, 68, 0.2);
-    font-size: 1rem;
+    font-size: 0.95rem;
   }
   
   .logout-icon {
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
   }
   
   .logout-text {
-    font-size: 0.95rem;
+    font-size: 0.9rem;
   }
   
   .nav-link {
     width: 100%;
-    padding: 12px 14px;
+    padding: 10px 12px;
     justify-content: flex-start;
+    font-size: 1rem;
   }
   
   .nav-link.router-link-exact-active::after {
@@ -768,32 +691,49 @@ export default {
     top: 50%;
     transform: translateY(-50%);
     width: 3px;
-    height: 20px;
+    height: 16px;
   }
   
-  .self-care-badge {
-    top: -4px;
-    right: -4px;
+  .self-care-badge, .neura-badge {
+    top: -2px;
+    right: 0;
+    font-size: 0.6rem;
+    padding: 2px 4px;
+  }
+
+  .logo-icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  .logo-main {
+    font-size: 1.2rem;
+  }
+
+  .logo-badge {
+    font-size: 0.5rem;
+    padding: 1px 4px;
+    right: -16px;
   }
 }
 
 @media (max-width: 480px) {
-  .logo-text {
-    flex-direction: row;
-    align-items: center;
-    gap: 4px;
-  }
-  
   .logo-main {
-    font-size: 1.3rem;
+    font-size: 1.1rem;
   }
   
-  .logo-sub {
-    font-size: 0.7rem;
+  .logo-badge {
+    font-size: 0.45rem;
+    padding: 1px 3px;
+    right: -14px;
   }
   
   .logout-btn {
-    padding: 16px;
+    padding: 10px;
+  }
+
+  .nav-link {
+    font-size: 0.95rem;
   }
 }
 </style>
