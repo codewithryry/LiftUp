@@ -17,7 +17,7 @@
               <h1>Neura AI</h1>
               <p class="chat-subtitle">
                 <template v-if="isTyping">Typing...</template>
-                <template v-else>Online</template>
+                <template v-else>Here for you!</template>
               </p>
             </div>
           </div>
@@ -54,7 +54,7 @@
         </div>
       </div>
 
-      <!-- Chat Input -->
+      <!-- Chat Input Area -->
       <div class="chat-input-container">
         <div class="quick-replies" v-if="showQuickReplies && !isTyping">
           <button 
@@ -66,24 +66,28 @@
             {{ reply }}
           </button>
         </div>
-        <form @submit.prevent="sendMessage">
+        <form @submit.prevent="sendMessage" class="input-form">
           <button type="button" class="input-btn voice-btn" @click="showVoiceWIP">
             <i class="fas fa-microphone"></i>
           </button>
           <input
             v-model="userInput"
             type="text"
-            placeholder="Message Neura..."
+            placeholder="Chat with Neura..."
             class="chat-input"
             :disabled="isTyping"
             ref="chatInput"
+            @focus="hideEmojiPicker"
           />
+          <button type="button" class="input-btn emoji-btn" @click="toggleEmojiPicker">
+            <i class="far fa-smile"></i>
+          </button>
           <button type="submit" class="send-btn" :disabled="!userInput || isTyping">
             <i class="fas fa-paper-plane"></i>
           </button>
         </form>
         <div class="disclaimer">
-          <p><i class="fas fa-info-circle"></i> Neura provides supportive listening but is not a substitute for professional care.</p>
+          <p><i class="fas fa-info-circle"></i> Neura is your friend but not a substitute for professional care.</p>
         </div>
       </div>
 
@@ -103,19 +107,19 @@
             <div class="modal-body">
               <div class="feature-item">
                 <i class="fas fa-heart"></i>
-                <p>Your compassionate mental health companion</p>
+                <p>Your friendly mental health companion</p>
               </div>
               <div class="feature-item">
                 <i class="fas fa-comments"></i>
-                <p>Provides supportive listening and guidance</p>
+                <p>Always here to listen and chat</p>
               </div>
               <div class="feature-item">
                 <i class="fas fa-shield-alt"></i>
-                <p>Private and secure conversations</p>
+                <p>Safe and private conversations</p>
               </div>
               <div class="disclaimer-note">
                 <i class="fas fa-exclamation-triangle"></i>
-                <p>Neura is not a substitute for professional medical advice, diagnosis, or treatment.</p>
+                <p>Neura is not a substitute for professional medical advice.</p>
               </div>
             </div>
             <div class="modal-footer">
@@ -148,8 +152,8 @@
                 <div class="wave-bar"></div>
                 <div class="wave-bar"></div>
               </div>
-              <p class="voice-instruction">Voice input is coming soon! We're working hard to implement this feature.</p>
-              <p class="voice-note">For now, please use text input to chat with Neura.</p>
+              <p class="voice-instruction">Voice input is coming soon!</p>
+              <p class="voice-note">For now, let's keep chatting with text.</p>
             </div>
             <div class="modal-footer">
               <button class="modal-action-btn primary" @click="showVoiceModal = false">
@@ -251,7 +255,6 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-
   display: flex;
   align-items: center;
   justify-content: center;
@@ -404,28 +407,6 @@
   color: var(--text-light);
   margin: 0;
 }
-.neura-chat-container {
-  --primary: #6C5CE7;
-  --primary-light: #A29BFE;
-  --primary-dark: #5649C0;
-  --secondary: #00CEC9;
-  --accent: #FD79A8;
-  --danger: #FF7675;
-  --success: #00B894;
-  --text: #2D3436;
-  --text-light: #636E72;
-  --bg: #F5F6FA;
-  --card-bg: #FFFFFF;
-  --shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  --shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.15);
-  --transition: all 0.3s ease;
-
-  display: flex;
-  height: 100vh;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  overflow: hidden;
-  background-color: var(--bg);
-}
 
 /* Main Content */
 .main-content {
@@ -547,232 +528,6 @@
 
 .header-btn:hover {
   background: rgba(0, 0, 0, 0.05);
-}
-
-/* Menu Modal */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  padding: 16px;
-}
-
-.menu-content {
-  background-color: var(--card-bg);
-  border-radius: 12px;
-  width: 100%;
-  max-width: 300px;
-  max-height: 80vh;
-  overflow: auto;
-  box-shadow: var(--shadow-hover);
-  animation: slideIn 0.3s ease;
-}
-
-@keyframes slideIn {
-  from { transform: translateX(-20px); opacity: 0; }
-  to { transform: translateX(0); opacity: 1; }
-}
-
-.menu-header {
-  padding: 16px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-}
-
-.menu-header h3 {
-  margin: 0;
-  color: var(--text);
-  font-size: 1.1rem;
-}
-
-.modal-close {
-  background: none;
-  border: none;
-  color: var(--text-light);
-  font-size: 1.2rem;
-  cursor: pointer;
-  padding: 4px;
-}
-
-.menu-body {
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.menu-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px;
-  border-radius: 8px;
-  background: none;
-  border: none;
-  color: var(--text);
-  font-size: 0.95rem;
-  cursor: pointer;
-  transition: var(--transition);
-  text-align: left;
-}
-
-.menu-item:hover {
-  background-color: rgba(0, 0, 0, 0.05);
-}
-
-.menu-item i {
-  color: var(--primary);
-}
-
-.user-profile {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: var(--transition);
-}
-
-.user-profile:hover {
-  background-color: rgba(0, 0, 0, 0.05);
-}
-
-.user-profile img {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-.avatar-placeholder {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background-color: var(--primary);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-}
-
-.user-info {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.username {
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: var(--text);
-}
-
-.user-status {
-  font-size: 0.8rem;
-  color: var(--text-light);
-}
-
-.profile-options {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding-left: 48px;
-}
-
-/* Chat History Modal */
-.modal-content {
-  background-color: var(--card-bg);
-  border-radius: 12px;
-  width: 90%;
-  max-width: 400px;
-  max-height: 80vh;
-  overflow: auto;
-  box-shadow: var(--shadow-hover);
-  animation: modalFadeIn 0.3s ease;
-}
-
-@keyframes modalFadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.modal-header {
-  padding: 16px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-}
-
-.modal-header h3 {
-  margin: 0;
-  color: var(--text);
-}
-
-.modal-body {
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.history-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: var(--transition);
-}
-
-.history-item:hover {
-  background-color: rgba(0, 0, 0, 0.05);
-}
-
-.history-item.active {
-  background-color: rgba(108, 92, 231, 0.1);
-}
-
-.history-item i {
-  color: var(--primary);
-  font-size: 1rem;
-}
-
-.history-content {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-}
-
-.history-preview {
-  font-size: 0.9rem;
-  color: var(--text);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.history-time {
-  font-size: 0.75rem;
-  color: var(--text-light);
-}
-
-.no-chats {
-  text-align: center;
-  color: var(--text-light);
-  font-size: 0.9rem;
 }
 
 /* Chat Messages */
@@ -1052,8 +807,7 @@ form {
 
 <script>
 import { auth } from '@/firebase';
-import { signOut } from 'firebase/auth';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { signOut, getAuth, onAuthStateChanged } from 'firebase/auth';
 import EmojiPicker from 'vue3-emoji-picker';
 import 'vue3-emoji-picker/css';
 
@@ -1064,18 +818,14 @@ export default {
   data() {
     return {
       userInput: '',
-      messages: [{
-        sender: 'neura',
-        text: "Hello! I'm Neura, your mental health companion. How can I support you today?",
-        time: this.getCurrentTime()
-      }],
+      messages: [],
       isTyping: false,
       showQuickReplies: true,
       quickReplies: [
-        "I'm feeling anxious",
-        "How can I improve my mood?",
-        "I need someone to talk to",
-        "What are some coping strategies?"
+        "I'm feeling a bit down",
+        "Can we chat about something fun?",
+        "I need a mood boost",
+        "What's a good way to relax?"
       ],
       showMenu: false,
       showEmojiPicker: false,
@@ -1086,31 +836,20 @@ export default {
       userName: 'Guest',
       userPhotoURL: '',
       isAuthenticated: false,
-      recentChats: [
-        { preview: "How to manage anxiety?", time: "10:30 AM" },
-        { preview: "Feeling stressed today", time: "Yesterday" },
-        { preview: "Sleep improvement tips", time: "Mar 28" }
-      ],
-      activeChatIndex: 0,
       authListener: null
     };
   },
   created() {
     this.initAuth();
+    this.loadMessages();
   },
   methods: {
     initAuth() {
       const auth = getAuth();
       this.authListener = onAuthStateChanged(auth, (user) => {
-        if (user) {
-          this.isAuthenticated = true;
-          this.userName = user.displayName || 'User';
-          this.userPhotoURL = user.photoURL || '';
-        } else {
-          this.isAuthenticated = false;
-          this.userName = 'Guest';
-          this.userPhotoURL = '';
-        }
+        this.isAuthenticated = !!user;
+        this.userName = user?.displayName || 'Guest';
+        this.userPhotoURL = user?.photoURL || '';
       });
     },
     async signOutUser() {
@@ -1125,25 +864,31 @@ export default {
     getCurrentTime() {
       return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     },
+    loadMessages() {
+      const savedMessages = localStorage.getItem('neuraChatMessages');
+      if (savedMessages) {
+        this.messages = JSON.parse(savedMessages);
+      } else {
+        this.messages = [{
+          sender: 'neura',
+          text: "Hey there! I'm Neura, your friendly companion. What's on your mind today?",
+          time: this.getCurrentTime()
+        }];
+      }
+      this.scrollToBottom();
+    },
+    saveMessages() {
+      localStorage.setItem('neuraChatMessages', JSON.stringify(this.messages));
+    },
     startNewChat() {
       this.messages = [{
         sender: 'neura',
-        text: "Hello! I'm Neura, your mental health companion. How can I support you today?",
+        text: "Hey there! I'm Neura, your friendly companion. What's on your mind today?",
         time: this.getCurrentTime()
       }];
       this.showQuickReplies = true;
-      this.activeChatIndex = -1;
-      this.showMenu = false;
-    },
-    selectChat(index) {
-      this.activeChatIndex = index;
-      this.showChatHistoryModal = false;
-      this.messages = [{
-        sender: 'neura',
-        text: "Continuing our previous conversation about " + this.recentChats[index].preview,
-        time: this.getCurrentTime()
-      }];
-      this.showQuickReplies = false;
+      this.saveMessages();
+      this.scrollToBottom();
     },
     sendSuggestion(text) {
       this.userInput = text;
@@ -1159,6 +904,7 @@ export default {
         time: this.getCurrentTime(),
       };
       this.messages.push(userMessage);
+      this.saveMessages();
 
       this.isTyping = true;
       const userInput = this.userInput;
@@ -1166,12 +912,10 @@ export default {
       this.scrollToBottom();
 
       try {
-        const chatHistory = this.messages
-          .filter((msg) => msg.sender !== 'user' || msg.text !== userInput)
-          .map((msg) => ({
-            role: msg.sender === 'user' ? 'USER' : 'CHATBOT',
-            message: msg.text,
-          }));
+        const chatHistory = this.messages.slice(-10).map((msg) => ({
+          role: msg.sender === 'user' ? 'USER' : 'CHATBOT',
+          message: msg.text,
+        }));
 
         const response = await fetch('https://api.cohere.ai/v1/chat', {
           method: 'POST',
@@ -1181,14 +925,12 @@ export default {
             'Accept': 'application/json',
           },
           body: JSON.stringify({
-            model: 'command',
+            model: 'command-r-plus',
             message: userInput,
             chat_history: chatHistory,
-            temperature: 0.7,
-            preamble: `You are Neura, a compassionate mental health assistant. 
-                      Respond with empathy, support, and professional insight. 
-                      Keep responses clear and avoid markdown formatting. 
-                      If the user is in crisis, gently suggest contacting professional help.`,
+            temperature: 0.8,
+            max_tokens: 200,
+            preamble: `You are Neura, a warm and friendly AI companion. Respond with empathy, a touch of humor, and a conversational tone, like a close friend. Keep responses concise, engaging, and supportive. If the user seems distressed, gently suggest professional help while staying caring.`,
           }),
         });
 
@@ -1197,20 +939,21 @@ export default {
         }
 
         const data = await response.json();
-        // Clean up the response by removing any markdown formatting
-        const cleanText = data.text.replace(/\*\*/g, '').replace(/\*/g, '');
+        const cleanText = data.text.replace(/[\*\#]/g, '').trim();
         this.messages.push({
           sender: 'neura',
           text: cleanText,
           time: this.getCurrentTime(),
         });
+        this.saveMessages();
       } catch (error) {
         console.error("Error:", error);
         this.messages.push({
           sender: 'neura',
-          text: "I'm having trouble responding right now. Please try again in a moment.",
+          text: "Oops, I'm having a little hiccup. Let's try that again, okay?",
           time: this.getCurrentTime(),
         });
+        this.saveMessages();
       }
 
       this.isTyping = false;
@@ -1256,6 +999,7 @@ export default {
       this.showVoiceModal = true;
     },
     goBack() {
+      this.saveMessages();
       this.$router.push('/emergency');
     }
   },
