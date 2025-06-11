@@ -9,8 +9,9 @@
     >
       <span class="toggle-icon">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M21 11.5C21 16.1944 16.9706 20 12 20C10.3892 20 8.86706 19.6394 7.53778 18.9983L3 20L4.25609 16.0294C3.46206 14.8447 3 13.4541 3 12C3 7.30558 7.02944 3.5 12 3.5C16.9706 3.5 21 7.30558 21 11.5Z" 
-          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="2"/>
+        <path d="M4 20C4 16.6863 7.13401 14 11 14H13C16.866 14 20 16.6863 20 20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <path d="M19 10H20C21.1046 10 22 10.8954 22 12V14C22 15.1046 21.1046 16 20 16H19" stroke="currentColor" stroke-width="2"/>
       </svg>
       </span>
     </button>
@@ -317,40 +318,79 @@ export default {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-/* Toggle Button */
 .widget-toggle {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 48px;
-  height: 48px;
-  background: linear-gradient(135deg, #7C3AED 0%, #5B21B6 100%);
+  position: fixed; /* use fixed for consistent positioning */
+  bottom: 16px;
+  right: 16px;
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #7C3AED, #5B21B6);
   color: white;
-  border: none; 
+  border: none;
   border-radius: 50%;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1001;
-  margin: 0;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   padding: 0;
-  box-shadow: none;
 }
 
+/* Hover effect */
 .widget-toggle:hover {
-  background: linear-gradient(135deg, #7C3AED 0%, #5B21B6 100%);
+  transform: scale(1.05);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
 }
 
-.widget-toggle.is-open {
-  background: #fff;
-  color: #00B894;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+/* Icon (SVG) inside the button */
+.widget-toggle svg {
+  width: 28px;
+  height: 28px;
+  stroke: white;
+  stroke-width: 2;
+  transition: transform 0.3s ease;
 }
 
-.toggle-icon {
-  display: flex;
+/* Small screens */
+@media (max-width: 480px) {
+  .widget-toggle {
+    width: 50px;
+    height: 50px;
+  }
+
+  .widget-toggle svg {
+    width: 22px;
+    height: 22px;
+  }
 }
+
+/* Large screens */
+@media (min-width: 768px) {
+  .widget-toggle {
+    width: 65px;
+    height: 65px;
+  }
+
+  .widget-toggle svg {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .widget-toggle {
+    width: 70px;
+    height: 70px;
+  }
+
+  .widget-toggle svg {
+    width: 32px;
+    height: 32px;
+  }
+}
+
 
 /* Widget Container */
 .widget-container {
