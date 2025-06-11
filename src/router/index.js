@@ -72,7 +72,7 @@ const routes = [
     meta: {
       title: 'Your Profile - LiftUp',
       requiresAuth: true,
-      showFooter: true,
+      showFooter: false,
       showNavbar: true,
       background: '#f1f5f9',
     },
