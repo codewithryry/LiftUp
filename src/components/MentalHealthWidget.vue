@@ -1,25 +1,17 @@
-<!-- C:\Users\USER\Desktop\projrct\liftup\src\components\MentalHealthWidget.vue -->
 <template>
   <div class="mental-health-widget">
-    <!-- Floating Toggle Button -->
+    <!-- Toggle Button (non-floating) -->
     <button 
       v-if="!isOpen"
       class="widget-toggle"
-      :class="{ 'is-open': isOpen }"
       @click="toggleWidget"
-      @keydown.ctrl.47="toggleWidget"
-      aria-label="Toggle mental health widget"
+      aria-label="Open mental health widget"
     >
       <span class="toggle-icon">
-<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <path d="M4 4H20C21.1 4 22 4.9 22 6V18C22 19.1 21.1 20 20 20H6L2 24V6C2 4.9 2.9 4 4 4Z" 
-    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-  <circle cx="8" cy="12" r="1" fill="currentColor"/>
-  <circle cx="12" cy="12" r="1" fill="currentColor"/>
-  <circle cx="16" cy="12" r="1" fill="currentColor"/>
-</svg>
-
-
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M21 11.5C21 16.1944 16.9706 20 12 20C10.3892 20 8.86706 19.6394 7.53778 18.9983L3 20L4.25609 16.0294C3.46206 14.8447 3 13.4541 3 12C3 7.30558 7.02944 3.5 12 3.5C16.9706 3.5 21 7.30558 21 11.5Z" 
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
       </span>
     </button>
 
@@ -110,6 +102,7 @@
 <script>
 import { auth } from '@/firebase';
 import { signOut, getAuth, onAuthStateChanged } from 'firebase/auth';
+import componentData from '@/assets/componentData.json';
 
 export default {
   name: 'MentalHealthWidget',
@@ -181,6 +174,20 @@ export default {
       this.scrollToBottom();
 
       try {
+        // Check if the query is about a component or creator
+        const componentResponse = this.checkComponentQuery(inputText);
+        if (componentResponse) {
+          this.messages.push({
+            sender: 'neura',
+            text: componentResponse,
+            time: this.getCurrentTime(),
+          });
+          this.saveMessages();
+          this.isTyping = false;
+          this.scrollToBottom();
+          return;
+        }
+
         // Translate to English if necessary
         if (this.language === 'tagalog') {
           inputText = await this.translate(inputText, 'en');
@@ -245,6 +252,29 @@ export default {
       this.scrollToBottom();
     },
 
+    checkComponentQuery(query) {
+      const lowerQuery = query.toLowerCase();
+
+      // Check for creator-related queries
+      if (lowerQuery.includes('creator') || lowerQuery.includes('created') || lowerQuery.includes('who made') || lowerQuery.includes('who create')) {
+        const creator = {
+          name: 'codewithryry',
+          role: 'Creator & Developer',
+          description: 'The founder of LiftUp and creator of the platform’s core systems. Focused on accessible, tech-driven mental health tools that empower users worldwide.'
+        };
+        return `LiftUp was created by ${creator.name} (${creator.role}): ${creator.description}`;
+      }
+
+      // Check for component-related queries
+      for (const [fileName, data] of Object.entries(componentData)) {
+        const componentName = data.name.toLowerCase();
+        if (lowerQuery.includes(componentName) || lowerQuery.includes(fileName.toLowerCase())) {
+          return `The ${data.name} page is about: ${data.description}`;
+        }
+      }
+      return null;
+    },
+
     scrollToBottom() {
       this.$nextTick(() => {
         const container = this.$refs.messagesContainer;
@@ -266,7 +296,6 @@ export default {
 
     async translate(text, targetLang) {
       // Add your translation logic here (Google Translate API or other)
-      // Placeholder return for now:
       return text;
     }
   },
@@ -279,7 +308,6 @@ export default {
 };
 </script>
 
-
 <style scoped>
 .mental-health-widget {
   position: fixed;
@@ -291,19 +319,23 @@ export default {
 
 /* Toggle Button */
 .widget-toggle {
-  position: relative;
+  position: absolute;
+  bottom: 0;
+  right: 0;
   width: 48px;
   height: 48px;
-  border-radius: 50%;
   background: linear-gradient(135deg, #7C3AED 0%, #5B21B6 100%);
   color: white;
-  border: none;
-  box-shadow: 0 4px 15px rgba(0, 184, 148, 0.3);
+  border: none; 
+  border-radius: 50%;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1001;
+  margin: 0;
+  padding: 0;
+  box-shadow: none;
 }
 
 .widget-toggle:hover {
@@ -333,7 +365,6 @@ export default {
   flex-direction: column;
   margin-bottom: 16px;
 }
-
 /* Header */
 .widget-header {
   padding: 12px;

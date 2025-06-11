@@ -1,0 +1,37 @@
+{
+  "About.vue": {
+    "name": "About",
+    "description": "LiftUp, founded in 2025, is a digital mental health platform offering anonymous, community-powered support. It features NueraAI, a 24/7 chatbot with evidence-based tools, and AI-powered therapist matching. Learn about our mission, team, and values.",
+    "team": [
+      {
+        "name": "Reymel Mislang",
+        "role": "Creator & Developer",
+        "description": "Founder of LiftUp and creator of the platform’s core systems. Focused on accessible, tech-driven mental health tools that empower users worldwide."
+      }
+    ]
+  },
+  "Forum.vue": {
+    "name": "Forum",
+    "description": "A safe, anonymous community for sharing mental health experiences. Create posts, comment, and sort by newest or most popular with pagination."
+  },
+  "SelfCare.vue": {
+    "name": "SelfCare",
+    "description": "Curated self-care resources for mental, physical, and emotional wellness. Filter by type or time, sort by relevance, and view in grid or list format."
+  },
+  "Profile.vue": {
+    "name": "Profile",
+    "description": "View and edit user info, including bio, posts, and saved resources. Includes mock session data; account deletion and photo changes are non-functional."
+  },
+  "Home.vue": {
+    "name": "Home",
+    "description": "Introduces LiftUp’s community, 24/7 NueraAI chatbot, and expert resources like articles, videos, and tools for anxiety, depression, and mindfulness."
+  },
+  "Resources.vue": {
+    "name": "Resources",
+    "description": "Expert-curated mental health resources, filterable by category or type. Sort by relevance or rating and view in grid or list format."
+  },
+  "EmergencyResources.vue": {
+    "name": "EmergencyResources",
+    "description": "Immediate support via NueraAI, therapist finder, 24/7 crisis hotlines (e.g., 988 Lifeline), and local resources for urgent needs."
+  }
+}

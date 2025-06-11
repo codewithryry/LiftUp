@@ -318,6 +318,8 @@
       </div>
     </div>
   </div>
+
+       <Overallchatbot />
 </template>
 
 <script>
@@ -330,13 +332,15 @@ import PostList from '@/components/forum/PostList.vue'
 import ResourceCard from '@/components/resources/ResourceCard.vue'
 import ActivityTracker from '@/components/selfcare/ActivityTracker.vue'
 import BioEditModal from '@/components/profile/BioEditModal.vue'
+import Overallchatbot from '@/components/MentalHealthWidget.vue';
 
 export default {
   components: {
     PostList,
     ResourceCard,
     ActivityTracker,
-    BioEditModal
+    BioEditModal,
+    Overallchatbot
   },
   data() {
     return {
