@@ -210,17 +210,22 @@
       @save-resource="toggleSavedResource"
     />
   </div>
+
+     <Overallchatbot />
 </template>
 
 <script>
 import SelfCareResource from '@/components/selfcare/SelfCareResource.vue'
 import SelfCareDetailModal from '@/components/selfcare/SelfCareDetailModal.vue'
 import { fetchSelfCareResources } from '@/services/selfcare.js'
+import Overallchatbot from '@/components/MentalHealthWidget.vue';
+
 
 export default {
   components: {
     SelfCareResource,
-    SelfCareDetailModal
+    SelfCareDetailModal,
+    Overallchatbot
   },
   data() {
     return {

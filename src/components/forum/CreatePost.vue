@@ -81,7 +81,7 @@ export default {
         title: '',
         category: '',
         content: '',
-        isAnonymous: false
+        isAnonymous: true
       },
       loading: false,
       error: null
@@ -121,7 +121,7 @@ export default {
         title: '',
         category: '',
         content: '',
-        isAnonymous: false
+        isAnonymous: true
       }
     }
   }

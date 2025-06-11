@@ -561,11 +561,18 @@
       </div>
     </section>
   </div>
+
+     <Overallchatbot />
 </template>
 
 <script>
+import Overallchatbot from '@/components/MentalHealthWidget.vue';
+
 export default {
   name: 'AboutPage',
+   components: {
+    Overallchatbot
+  },
   data() {
     return {
       typedText: '',

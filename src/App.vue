@@ -2,7 +2,7 @@
   <div id="app">
     <!-- Loading overlay -->
     <div v-if="isLoading" class="loading-overlay">
-      <div class="loading-spinner"></div>
+     <img src="/img/logo.png" alt="Loading..." class="loading-logo" />
     </div>
     
     <template v-else>
@@ -106,14 +106,12 @@ export default {
   z-index: 9999;
 }
 
-.loading-spinner {
-  width: 50px;
-  height: 50px;
-  border: 5px solid #f3f3f3;
-  border-top: 5px solid #3498db;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
+.loading-logo {
+  width: 150px;
+  height: 150px;
+  animation: pulse 1.5s ease-in-out infinite;
 }
+
 
 @keyframes spin {
   0% { transform: rotate(0deg); }

@@ -191,17 +191,21 @@
       @save-resource="toggleSavedResource"
     />
   </div>
+     <Overallchatbot />
 </template>
 
 <script>
 import ResourceCard from '@/components/resources/ResourceCard.vue'
 import ResourceDetailModal from '@/components/resources/ResourceDetailModal.vue'
 import { fetchResources } from '@/services/resources.js'
+import Overallchatbot from '@/components/MentalHealthWidget.vue';
+
 
 export default {
   components: {
     ResourceCard,
-    ResourceDetailModal
+    ResourceDetailModal,
+    Overallchatbot
   },
   data() {
     return {

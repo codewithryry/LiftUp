@@ -6,7 +6,7 @@
         <i class="fas fa-user-secret"></i> All comments are posted anonymously
       </p>
     </div>
-    
+
     <!-- Comment Form -->
     <div class="comment-form">
       <div class="anonymous-avatar">
@@ -40,7 +40,7 @@
         </div>
       </div>
     </div>
-    
+
     <!-- Comments List -->
     <div class="comments-list">
       <!-- Loading State -->
@@ -48,14 +48,14 @@
         <div class="spinner"></div>
         <p>Loading comments...</p>
       </div>
-      
+
       <!-- Empty State -->
       <div v-else-if="comments.length === 0" class="empty-state">
         <i class="fas fa-comment-slash"></i>
         <h4>No comments yet</h4>
         <p>Be the first to share your thoughts</p>
       </div>
-      
+
       <!-- Comments -->
       <div v-else>
         <div 
@@ -63,24 +63,34 @@
           :key="comment.id" 
           class="comment"
         >
+          <!-- Avatar Icon -->
           <div class="anonymous-avatar">
             <i class="fas fa-user-secret"></i>
           </div>
+
+          <!-- Comment Content -->
           <div class="comment-content">
             <div class="comment-header">
               <span class="comment-author">Anonymous</span>
               <span class="comment-date">{{ formattedDate(comment.createdAt) }}</span>
             </div>
+
+            <!-- Comment Text -->
             <p class="comment-text">{{ comment.content }}</p>
+
+            <!-- Action Buttons -->
             <div class="comment-actions">
+              <!-- Like Button -->
               <button 
                 @click="toggleLike(comment.id)" 
                 class="btn-icon like-btn"
                 :class="{ liked: comment.isLiked }"
                 aria-label="Like comment"
               >
-                <i class="far fa-heart"></i>
+                <i :class="comment.isLiked ? 'fas fa-heart' : 'far fa-heart'"></i>
               </button>
+
+              <!-- Report Button -->
               <button 
                 v-if="showReportButton"
                 @click="reportComment(comment.id)"
@@ -88,6 +98,15 @@
                 aria-label="Report comment"
               >
                 <i class="far fa-flag"></i>
+              </button>
+
+              <!-- Reply Button -->
+              <button 
+                @click="replyToComment(comment.id)" 
+                class="btn-icon reply-btn"
+                aria-label="Reply to comment"
+              >
+                <i class="fas fa-reply"></i>
               </button>
             </div>
           </div>
@@ -105,7 +124,6 @@ import {
   addDoc, 
   serverTimestamp, 
   query, 
-  where, 
   orderBy, 
   onSnapshot,
   doc,
@@ -143,17 +161,16 @@ export default {
       if (!newComment.value.trim() || isSubmitting.value) return
 
       isSubmitting.value = true
-      
       try {
         await addDoc(collection(db, 'posts', props.postId, 'comments'), {
           content: newComment.value.trim(),
           createdAt: serverTimestamp(),
-          userId: 'anonymous', // Or use actual user ID if not anonymous
+          userId: 'anonymous',
           userName: 'Anonymous',
           likeCount: 0,
           reported: false
         })
-        
+
         newComment.value = ''
         isExpanded.value = false
         emit('comment-added')
@@ -190,6 +207,11 @@ export default {
       }
     }
 
+    const replyToComment = (commentId) => {
+      console.log("Reply clicked for comment:", commentId)
+      // You can add logic to open reply box/modal
+    }
+
     const fetchComments = () => {
       loadingComments.value = true
       const q = query(
@@ -208,6 +230,11 @@ export default {
         console.error("Error fetching comments:", error)
         loadingComments.value = false
       })
+    }
+
+    const cancelComment = () => {
+      newComment.value = ''
+      isExpanded.value = false
     }
 
     onMounted(() => {
@@ -229,6 +256,8 @@ export default {
       addComment,
       toggleLike,
       reportComment,
+      replyToComment,
+      cancelComment,
       formattedDate
     }
   }

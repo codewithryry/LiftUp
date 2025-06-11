@@ -808,12 +808,11 @@ form {
 <script>
 import { auth } from '@/firebase';
 import { signOut, getAuth, onAuthStateChanged } from 'firebase/auth';
-import EmojiPicker from 'vue3-emoji-picker';
-import 'vue3-emoji-picker/css';
+
 
 export default {
   components: {
-    EmojiPicker
+   
   },
   data() {
     return {
@@ -930,7 +929,11 @@ export default {
             chat_history: chatHistory,
             temperature: 0.8,
             max_tokens: 200,
-            preamble: `You are Neura, a warm and friendly AI companion. Respond with empathy, a touch of humor, and a conversational tone, like a close friend. Keep responses concise, engaging, and supportive. If the user seems distressed, gently suggest professional help while staying caring.`,
+            preamble: `You are Neura, a highly advanced AI designed exclusively for mental health and emotional well-being.
+             Your purpose is to support users with empathy, clarity, and psychological insight. 
+             You do not answer questions outside the scope of emotional wellness—such as general knowledge, technology, science, math, or current events. 
+             If prompted with unrelated topics, firmly but kindly redirect the conversation toward the user's thoughts, feelings, or mental state. 
+             Always maintain emotional intelligence, compassion, and focus. You are precise, grounded, and deeply supportive.`,
           }),
         });
 
@@ -970,27 +973,6 @@ export default {
     toggleMenu() {
       this.showMenu = !this.showMenu;
       this.showEmojiPicker = false;
-    },
-    toggleEmojiPicker() {
-      this.showEmojiPicker = !this.showEmojiPicker;
-      if (this.showEmojiPicker) {
-        this.$nextTick(() => {
-          const picker = document.querySelector('.emoji-picker');
-          if (picker) {
-            picker.scrollTop = 0;
-          }
-          this.$refs.chatInput?.focus();
-        });
-      }
-    },
-    closeEmojiPicker() {
-      this.showEmojiPicker = false;
-    },
-    addEmoji(emoji) {
-      this.userInput += emoji.i;
-      this.$nextTick(() => {
-        this.$refs.chatInput?.focus();
-      });
     },
     toggleInfo() {
       this.showInfoModal = !this.showInfoModal;

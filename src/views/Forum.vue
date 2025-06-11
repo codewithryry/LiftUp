@@ -12,7 +12,6 @@
               class="btn-primary pulse"
               aria-label="Create new post"
             >
-             
               Create new post ...
             </button>
           </div>
@@ -28,6 +27,7 @@
         v-if="showModal" 
         @close="showModal = false" 
         @post-created="handlePostCreated"
+       :isAnonymous="true"  
       />
 
       <!-- Filter Section - Mobile Optimized -->
@@ -84,12 +84,12 @@
                 </select>
               </div>
               <button 
-              class="view-toggle"
-              @click="toggleView"
-              :aria-label="gridView ? 'Switch to list view' : 'Switch to grid view'"
-            >
-              <i :class="gridView ? 'fas fa-th-list' : 'fas fa-th-large'"></i>
-            </button>
+                class="view-toggle"
+                @click="toggleView"
+                :aria-label="gridView ? 'Switch to list view' : 'Switch to grid view'"
+              >
+                <i :class="gridView ? 'fas fa-th-list' : 'fas fa-th-large'"></i>
+              </button>
             </div>
           </div>
         </div>
@@ -194,8 +194,8 @@
       </section>
     </main>
 
-<!-- Comments Modal -->
-<transition name="modal">
+    <!-- Comments Modal -->
+    <transition name="modal">
       <div v-if="selectedPost" class="modal-overlay" @click.self="closeCommentsModal">
         <div class="modal-container">
           <div class="modal-header">
@@ -215,21 +215,25 @@
       </div>
     </transition>
   </div>
+
+     <Overallchatbot />
 </template>
 
 <script>
 import { ref, onMounted, computed } from 'vue'
 import { db } from '@/firebase'
-import { collection, query, orderBy, where, getDocs, updateDoc, doc, increment } from 'firebase/firestore'
+import { collection, query, orderBy, getDocs, updateDoc, doc, increment, arrayUnion, arrayRemove, getDoc } from 'firebase/firestore'
 import CreatePost from '@/components/forum/CreatePost.vue'
 import PostItem from '@/components/forum/PostItem.vue'
 import CommentSection from '@/components/forum/CommentSection.vue'
+import Overallchatbot from '@/components/MentalHealthWidget.vue';
 
 export default {
   components: {
     CreatePost,
     PostItem,
-    CommentSection
+    CommentSection,
+    Overallchatbot
   },
   setup() {
     // Reactive state
@@ -250,6 +254,9 @@ export default {
     const retryCount = ref(0)
     const maxRetries = 3
 
+    // Track liked posts (using local storage or Firebase Auth)
+    const likedPosts = ref(new Set(JSON.parse(localStorage.getItem('likedPosts') || '[]')))
+
     // Filter options
     const filterOptions = [
       { value: 'all', label: 'All Posts', icon: 'fas fa-layer-group' },
@@ -265,7 +272,6 @@ export default {
       
       let result = [...posts.value]
       
-      // Apply category filters
       if (filter.value === 'support') {
         result = result.filter(post => post.category === 'support')
       } 
@@ -276,7 +282,6 @@ export default {
         result = result.sort((a, b) => (b.likes || 0) - (a.likes || 0))
       }
       
-      // Apply search
       if (searchQuery.value) {
         const query = searchQuery.value.toLowerCase()
         result = result.filter(post => 
@@ -285,7 +290,6 @@ export default {
         )
       }
       
-      // Apply sort
       switch (sortBy.value) {
         case 'newest':
           return result.sort((a, b) => b.createdAt - a.createdAt)
@@ -330,7 +334,10 @@ export default {
             id: doc.id,
             ...data,
             createdAt: data.createdAt?.toDate() || new Date(),
-            category: data.category || 'general' // Default category
+            category: data.category || 'general',
+            author: data.isAnonymous ? 'Anonymous' : data.author || 'User',
+            likedBy: data.likedBy || [], // Track users who liked the post
+            likes: data.likes || 0
           }
         })
 
@@ -388,15 +395,47 @@ export default {
 
     const likePost = async (postId) => {
       try {
-        const postRef = doc(db, 'posts', postId)
-        await updateDoc(postRef, {
-          likes: increment(1)
-        })
-        // Update local state immediately for better UX
-        const post = posts.value.find(p => p.id === postId)
-        if (post) post.likes = (post.likes || 0) + 1
+        // Generate a unique user ID (or use Firebase Auth UID if available)
+        const userId = localStorage.getItem('userId') || `anon_${Math.random().toString(36).substr(2, 9)}`
+        if (!localStorage.getItem('userId')) localStorage.setItem('userId', userId)
+
+        // Check if the user has already liked the post
+        if (likedPosts.value.has(postId)) {
+          // Unlike the post
+          const postRef = doc(db, 'posts', postId)
+          await updateDoc(postRef, {
+            likes: increment(-1),
+            likedBy: arrayRemove(userId)
+          })
+
+          // Update local state
+          likedPosts.value.delete(postId)
+          localStorage.setItem('likedPosts', JSON.stringify([...likedPosts.value]))
+          const post = posts.value.find(p => p.id === postId)
+          if (post) {
+            post.likes = (post.likes || 1) - 1
+            post.likedBy = post.likedBy.filter(id => id !== userId)
+          }
+        } else {
+          // Like the post
+          const postRef = doc(db, 'posts', postId)
+          await updateDoc(postRef, {
+            likes: increment(1),
+            likedBy: arrayUnion(userId)
+          })
+
+          // Update local state
+          likedPosts.value.add(postId)
+          localStorage.setItem('likedPosts', JSON.stringify([...likedPosts.value]))
+          const post = posts.value.find(p => p.id === postId)
+          if (post) {
+            post.likes = (post.likes || 0) + 1
+            post.likedBy = [...(post.likedBy || []), userId]
+          }
+        }
       } catch (err) {
-        console.error('Error liking post:', err)
+        console.error('Error liking/unliking post:', err)
+        error.value = 'Failed to update like. Please try again.'
       }
     }
 
@@ -407,6 +446,18 @@ export default {
 
     const handleCommentAdded = () => {
       fetchPosts()
+    }
+
+    const handleLikeComment = async (commentId) => {
+      try {
+        const commentRef = doc(db, 'comments', commentId)
+        await updateDoc(commentRef, {
+          likes: increment(1)
+        })
+      } catch (err) {
+        console.error('Error liking comment:', err)
+        error.value = 'Failed to like comment. Please try again.'
+      }
     }
 
     const prevPage = () => {
@@ -460,6 +511,7 @@ export default {
       closeCommentsModal,
       likePost,
       handleCommentAdded,
+      handleLikeComment,
       prevPage,
       nextPage,
       goToPage,
@@ -467,7 +519,8 @@ export default {
       retryCount,
       retryFetch,
       resetErrorState,
-      toggleView
+      toggleView,
+      likedPosts
     }
   }
 }

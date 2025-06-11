@@ -882,16 +882,20 @@
         </div>
       </div>
     </section>
-     
+    <Overallchatbot />
   </div>
 </template>
 
 <script>
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import Overallchatbot from '@/components/MentalHealthWidget.vue';
 
 export default {
   name: 'HomePage',
+  components: {
+    Overallchatbot
+  },
   data() {
     return {
       particles: Array(30).fill(0)

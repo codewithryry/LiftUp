@@ -14,7 +14,7 @@ const routes = [
       requiresAuth: false,
       showFooter: true,
       showNavbar: true,
-      background: '#f1f5f9', // Light slate
+      background: '#f1f5f9',
     },
   },
   {
