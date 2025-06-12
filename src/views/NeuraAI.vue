@@ -45,7 +45,7 @@
           </div>
           <div class="message-content">
             <p style="white-space: pre-line">{{ message.text }}</p>
-            <span class="message-time">{{ message.time }}</span>
+            <!-- <span class="message-time">{{ message.time }}</span> -->
             <div class="message-actions" v-if="message.sender === selectedModel">
               <button 
                 class="action-btn" 
@@ -283,7 +283,7 @@
                 >
                   <div class="message-content">
                     <p style="white-space: pre-line">{{ message.text }}</p>
-                    <span class="message-time">{{ message.time }}</span>
+                    <!-- <span class="message-time">{{ message.time }}</span> -->
                   </div>
                 </div>
               </div>
@@ -429,7 +429,7 @@ export default {
       }
     },
     getCurrentTime() {
-      return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      // return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     },
     loadMessages() {
       const storageKey = `neuraChatMessages_${this.selectedModel}`;
