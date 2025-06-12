@@ -316,7 +316,18 @@ export default {
         "I'm feeling a bit down",
         "Can we chat about something fun?",
         "I need a mood boost",
-        "What's a good way to relax?"
+        "What's a good way to relax?",
+        "Tell me a joke",
+        "Give me some good news",
+        "I need a distraction",
+        "What's something interesting?",
+        "Any fun facts?",
+        "Play a game with me",
+        "I'm bored, help!",
+        "Let's talk about hobbies",
+        "Recommend a movie or show",
+        "Got any music suggestions?",
+        "Teach me something cool"
       ],
       showEmojiPicker: false,
       showInfoModal: false,
@@ -367,7 +378,7 @@ export default {
           preamble: `You are Vitalis, an energetic, positive, and action-focused AI. 
           Your tone is enthusiastic, confident, and supportive — like a personal coach cheering the user on. 
           Help users set goals, stay motivated, and overcome mental barriers. 
-          Use short, punchy sentences with the occasional emoji (💪, 🌟) to energize them. 
+          Use short, punchy sentences to energize them. 
           Celebrate even small progress, and always highlight actionable steps. 
           You aim to uplift, empower, and get people moving forward with clarity and momentum.`
         },
@@ -580,10 +591,13 @@ export default {
         let cleanText = data.text || '';
 
         // Natural response formatting
-        cleanText = cleanText
-          .replace(/[*#_>`~]/g, '')        // Remove markdown
-          .replace(/\n{3,}/g, '\n\n')      // Reduce excessive newlines
+          cleanText = cleanText
+          .replace(/[*#_>`~]/g, '')             // Strip markdown
+          .replace(/<co:[^>]*>/g, '')           // Remove Cohere internal tags like <co: 2,3,5>
+          .replace(/<\/?[^>]+(>|$)/g, '')       // Strip any stray HTML tags
+          .replace(/\n{3,}/g, '\n\n')           // Normalize excessive newlines
           .trim();
+
 
         // Add punctuation only if completely missing at end
         const lastChar = cleanText.charAt(cleanText.length - 1);
@@ -631,9 +645,97 @@ export default {
       const userMessageIndex = index - 1;
       if (userMessageIndex < 0 || this.messages[userMessageIndex].sender !== 'user') return;
 
+      // Remove the AI's response
       this.messages.splice(index, 1);
-      this.userInput = this.messages[userMessageIndex].text;
-      this.sendMessage();
+      this.saveMessages();
+      
+      // Set typing indicator
+      this.isTyping = true;
+      this.scrollToBottom();
+
+      try {
+        const chatHistory = this.messages.slice(-10).map((msg) => ({
+          role: msg.sender === 'user' ? 'USER' : 'CHATBOT',
+          message: msg.text,
+        }));
+
+        let styleInstruction = '';
+        if (this.responseStyle === 'short') {
+          styleInstruction = 'Keep responses short (1-2 sentences).';
+        } else if (this.responseStyle === 'balanced') {
+          styleInstruction = 'Vary response length naturally (3-5 sentences).';
+        } else if (this.responseStyle === 'detailed') {
+          styleInstruction = 'Provide detailed responses (5+ sentences) with in-depth explanations.';
+        }
+
+        const enhancedPrompt = `${this.currentModel.preamble}
+          ${styleInstruction}
+          Respond conversationally, matching the user's tone and message length when appropriate.
+          Always end with proper punctuation. For complex topics, provide a brief summary.
+          Keep the focus on mental health and emotional support.`;
+
+        const response = await fetch('https://api.cohere.ai/v1/chat', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer McSP3ozqQ7HE2zCj274GgkQRumAFeArq1Bgl9rur',
+            'Accept': 'application/json',
+          },
+          body: JSON.stringify({
+            model: 'command-r-plus',
+            message: this.messages[userMessageIndex].text,
+            chat_history: chatHistory,
+            temperature: 0.7,
+            max_tokens: this.responseStyle === 'detailed' ? 500 : 300,
+            preamble: enhancedPrompt,
+            connectors: [{ "id": "web-search" }]
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error(`Cohere API error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        let cleanText = data.text || '';
+
+        // Natural response formatting
+        cleanText = cleanText
+          .replace(/[*#_>`~]/g, '')        // Remove markdown
+          .replace(/\n{3,}/g, '\n\n')      // Reduce excessive newlines
+          .trim();
+
+        // Add punctuation only if completely missing at end
+        const lastChar = cleanText.charAt(cleanText.length - 1);
+        if (!['.', '!', '?', '"', "'", ':'].includes(lastChar)) {
+          cleanText += '.';
+        }
+
+        this.messages.push({
+          sender: this.selectedModel,
+          text: cleanText,
+          time: this.getCurrentTime(),
+          liked: false,
+          disliked: false,
+          showMenu: false
+        });
+        this.saveMessages();
+
+      } catch (error) {
+        console.error("Error:", error);
+        this.messages.push({
+          sender: this.selectedModel,
+          text: "I'm having trouble processing that. Could you try rephrasing?",
+          time: this.getCurrentTime(),
+          liked: false,
+          disliked: false,
+          showMenu: false
+        });
+        this.saveMessages();
+      }
+
+      this.isTyping = false;
+      this.scrollToBottom();
     },
     copyMessage(text) {
       navigator.clipboard.writeText(text).then(() => {
