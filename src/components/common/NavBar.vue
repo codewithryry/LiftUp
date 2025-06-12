@@ -59,15 +59,23 @@
               </svg>
               <span>About</span>
             </router-link>
-            <router-link to="/emergency" class="nav-link emergency-link" @click="closeMobileMenu">
-              <svg class="nav-icon" viewBox="0 0 24 24" fill="none">
-                <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M12 8V12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M12 16H12.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-              <span>Emergency</span>
-              <span class="neura-badge">NeuraAI</span>
-            </router-link>
+          <router-link to="/emergency/neura" class="nav-link neura-link" @click="closeMobileMenu">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none">
+              <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M8 12H16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M12 8V16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Neura AI</span>
+            <span class="neura-badge">AI</span>
+          </router-link>
+          <router-link to="/emergency" class="nav-link emergency-link" @click="closeMobileMenu">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none">
+              <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M12 8V12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M12 16H12.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Emergency</span>
+          </router-link>
           </div>
           
           <div class="auth-section">
@@ -216,6 +224,42 @@ export default {
 </script>
 
 <style scoped>
+/* NeuraAI Link */
+.neura-link {
+  color: #3B82F6;
+  position: relative;
+}
+
+.neura-link .nav-icon {
+  color: currentColor;
+}
+
+.neura-link:hover {
+  color: #2563EB;
+  background: rgba(59, 130, 246, 0.05);
+}
+
+.neura-link.router-link-exact-active {
+  color: #2563EB;
+  font-weight: 600;
+}
+
+.neura-link.router-link-exact-active::after {
+  background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+}
+
+.neura-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: #10B981;
+  color: white;
+  font-size: 0.55rem;
+  font-weight: 700;
+  padding: 2px 5px;
+  border-radius: 999px;
+  animation: pulse 2s infinite;
+}
 /* Base Styles */
 .navbar {
   background: white;

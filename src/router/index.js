@@ -24,7 +24,7 @@ const routes = [
     meta: {
       title: 'Mental Wellness Resources - LiftUp',
       requiresAuth: false,
-      showFooter: true,
+       showFooter: false,
       showNavbar: true,
       background: '#f1f5f9',
     },
@@ -48,7 +48,7 @@ const routes = [
     meta: {
       title: 'Self-Care Tips - LiftUp',
       requiresAuth: false,
-      showFooter: true,
+       showFooter: false,
       showNavbar: true,
       background: '#f1f5f9',
     },
@@ -60,7 +60,7 @@ const routes = [
     meta: {
       title: 'About LiftUp',
       requiresAuth: false,
-      showFooter: true,
+       showFooter: false,
       showNavbar: true,
       background: '#f1f5f9',
     },
@@ -120,7 +120,7 @@ const routes = [
     meta: {
       title: 'Emergency Resources - LiftUp',
       requiresAuth: false,
-      showFooter: true,
+       showFooter: false,
       showNavbar: true,
       background: '#f1f5f9',
     },
@@ -146,8 +146,7 @@ const routes = [
       title: 'Find a Therapist - LiftUp',
       requiresAuth: false,
       showFooter: false,
-      showNavbar: false,
-      hideAllNavigation: true,
+      showNavbar: true,
       background: '#f1f5f9',
     },
   },

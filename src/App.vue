@@ -2,29 +2,32 @@
   <div id="app">
     <!-- Loading overlay -->
     <div v-if="isLoading" class="loading-overlay">
-     <img src="/img/logo.png" alt="Loading..." class="loading-logo" />
+      <img src="/img/logo.png" alt="Loading..." class="loading-logo" />
     </div>
     
     <template v-else>
       <!-- Emergency Resources Modal -->
-      <EmergencyResources v-if="showEmergency" @close="showEmergency = false"/>
+      <EmergencyResources v-if="showEmergency" @close="showEmergency = false" />
       
-      <!-- NavBar (conditionally shown based on route meta) -->
+      <!-- NavBar (only shown after loading and based on route meta) -->
       <NavBar 
-        v-if="showNavbar && !hideAllNavigation" 
+        v-if="!isLoading && showNavbar && !hideAllNavigation" 
         @show-emergency="showEmergency = true"
       />
       
       <!-- Main Content -->
       <main :class="{'full-height': hideAllNavigation}">
-        <router-view/>
+        <router-view />
       </main>
       
-      <!-- Footer (conditionally shown based on route meta) -->
-      <Footer v-if="showFooter && !hideAllNavigation"/>
+      <!-- Footer (only shown after loading and based on route meta) -->
+      <Footer 
+        v-if="!isLoading && showFooter && !hideAllNavigation" 
+      />
     </template>
   </div>
 </template>
+
 
 <script>
 import NavBar from '@/components/common/NavBar.vue'

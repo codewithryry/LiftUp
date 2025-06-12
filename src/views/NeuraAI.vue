@@ -77,13 +77,13 @@
               >
                 <i class="fas fa-copy"></i>
               </button>
-              <button 
-                class="action-btn menu-btn" 
-                disabled
-                title="More options"
-              >
-                <i class="fas fa-ellipsis-v"></i>
-              </button>
+            <button 
+              class="action-btn menu-btn" 
+              @click="speakMessage(message.text)"
+              title="Listen"
+            >
+              <i class="fas fa-volume-up"></i>
+            </button>
             </div>
           </div>
         </div>
@@ -109,9 +109,17 @@
           </button>
         </div>
         <form @submit.prevent="sendMessage" class="input-form">
-          <button type="button" class="input-btn voice-btn" @click="showVoiceWIP" title="Voice Input">
-            <i class="fas fa-microphone"></i>
-          </button>
+        <button 
+          type="button" 
+          class="input-btn voice-btn" 
+          @click="toggleVoiceInput" 
+          title="Voice Input" 
+          :class="{ 'active': isListening }"
+          :disabled="!voiceInputSupported"
+        >
+          <i class="fas fa-microphone"></i>
+          <span v-if="!voiceInputSupported" class="tooltip">Voice input not supported</span>
+        </button>
           <input
             v-model="userInput"
             type="text"
@@ -175,15 +183,15 @@
       <transition name="modal-fade">
         <div class="modal-overlay" v-if="showVoiceModal" @click="showVoiceModal = false">
           <div class="modal-content voice-modal" @click.stop>
-            <div class="modal-header">
+            <!-- <div class="modal-header"> -->
               <!-- <div class="modal-icon voice-icon">
                 <i class="fas fa-microphone"></i>
               </div>
               <h3>Voice Input</h3>
               <button class="modal-close" @click="showVoiceModal = false" title="Close">
                 <i class="fas fa-times"></i>
-              </button> -->
-            </div>
+              </button>
+            </div> -->
             <div class="modal-body">
               <!-- <div class="voice-wave">
                 <div class="wave-bar"></div>
@@ -195,9 +203,9 @@
               <p class="voice-instruction">Voice input is coming soon!</p>
               <p class="voice-note">For now, let's keep chatting with text.</p>
             </div>
-            <div class="modal-footer">
+            <!-- <div class="modal-footer">
               <button class="modal-action-btn primary" @click="showVoiceModal = false">Continue with text</button>
-            </div>
+            </div> -->
           </div>
         </div>
       </transition>
@@ -340,6 +348,10 @@ export default {
       authListener: null,
       selectedModel: 'neura',
       responseStyle: 'balanced',
+      isSpeaking: false,
+      isListening: false,
+      recognition: null,
+      voiceInputSupported: false,
       aiModels: [
         {
           id: 'neura',
@@ -421,8 +433,116 @@ export default {
     this.initAuth();
     this.loadMessages();
     this.loadResponseStyle();
+    
+    // Initialize speech synthesis
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.onvoiceschanged = () => {
+        this.availableVoices = window.speechSynthesis.getVoices();
+      };
+    }
+    
+    // Initialize voice recognition
+    this.initializeVoiceRecognition();
   },
   methods: {
+    initializeVoiceRecognition() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      
+      if (SpeechRecognition) {
+        this.voiceInputSupported = true;
+        this.recognition = new SpeechRecognition();
+        this.recognition.continuous = false;
+        this.recognition.interimResults = false;
+        this.recognition.lang = this.getRecognitionLanguage();
+        
+        this.recognition.onresult = (event) => {
+          const transcript = event.results[0][0].transcript;
+          this.userInput = transcript;
+          this.isListening = false;
+          this.$nextTick(() => {
+            this.sendMessage();
+          });
+        };
+        
+        this.recognition.onerror = (event) => {
+          console.error('Voice recognition error', event.error);
+          this.isListening = false;
+          this.showVoiceError(event.error);
+        };
+        
+        this.recognition.onend = () => {
+          if (this.isListening) {
+            this.isListening = false;
+          }
+        };
+      } else {
+        this.voiceInputSupported = false;
+        console.warn('Speech recognition not supported in this browser');
+      }
+    },
+    
+    getRecognitionLanguage() {
+      // Default to English, but you can implement language detection
+      // based on user preferences or current model
+      switch(this.selectedModel) {
+        case 'lingua':
+          return 'en-US'; // Could implement multi-language detection
+        default:
+          return 'en-US';
+      }
+    },
+    
+    toggleVoiceInput() {
+      if (!this.voiceInputSupported) {
+        alert('Voice input is not supported in your browser. Please use Chrome or Edge.');
+        return;
+      }
+      
+      if (this.isListening) {
+        this.stopVoiceInput();
+      } else {
+        this.startVoiceInput();
+      }
+    },
+    
+    startVoiceInput() {
+      if (this.recognition) {
+        this.isListening = true;
+        try {
+          this.recognition.start();
+          this.userInput = ''; // Clear previous input
+        } catch (error) {
+          console.error('Error starting voice recognition:', error);
+          this.isListening = false;
+        }
+      }
+    },
+    
+    stopVoiceInput() {
+      if (this.recognition) {
+        this.recognition.stop();
+        this.isListening = false;
+      }
+    },
+    
+    showVoiceError(error) {
+      let message = 'Voice input error: ';
+      switch(error) {
+        case 'no-speech':
+          message += 'No speech was detected.';
+          break;
+        case 'audio-capture':
+          message += 'No microphone was found.';
+          break;
+        case 'not-allowed':
+          message += 'Permission to use microphone was denied.';
+          break;
+        default:
+          message += 'An error occurred with voice recognition.';
+      }
+      alert(message);
+    },
+    
     initAuth() {
       const auth = getAuth();
       this.authListener = onAuthStateChanged(auth, (user) => {
@@ -590,14 +710,12 @@ export default {
         const data = await response.json();
         let cleanText = data.text || '';
 
-        // Natural response formatting
-          cleanText = cleanText
+        cleanText = cleanText
           .replace(/[*#_>`~]/g, '')             // Strip markdown
-          .replace(/<co:[^>]*>/g, '')           // Remove Cohere internal tags like <co: 2,3,5>
+          .replace(/<co:[^>]*>/g, '')           // Remove Cohere internal tags
           .replace(/<\/?[^>]+(>|$)/g, '')       // Strip any stray HTML tags
           .replace(/\n{3,}/g, '\n\n')           // Normalize excessive newlines
           .trim();
-
 
         // Add punctuation only if completely missing at end
         const lastChar = cleanText.charAt(cleanText.length - 1);
@@ -699,7 +817,6 @@ export default {
         const data = await response.json();
         let cleanText = data.text || '';
 
-        // Natural response formatting
         cleanText = cleanText
           .replace(/[*#_>`~]/g, '')        // Remove markdown
           .replace(/\n{3,}/g, '\n\n')      // Reduce excessive newlines
@@ -745,6 +862,85 @@ export default {
         alert('Failed to copy message.');
       });
     },
+    speakMessage(text) {
+      if ('speechSynthesis' in window) {
+        // Stop any currently speaking
+        window.speechSynthesis.cancel();
+        this.isSpeaking = false;
+        
+        // Create a new speech utterance
+        const utterance = new SpeechSynthesisUtterance(text);
+        
+        // Set voice properties
+        utterance.rate = 1;  // Speed (0.1 to 10)
+        utterance.pitch = 1; // Pitch (0 to 2)
+        utterance.volume = 1; // Volume (0 to 1)
+        
+        // Try to detect language and find appropriate voice
+        const voices = window.speechSynthesis.getVoices();
+        
+        // Simple language detection (you might want to use a more robust solution)
+        const isEnglish = /[a-zA-Z]/.test(text) && !/[áéíóúñ¿¡]/.test(text);
+        const isTagalog = /[mga kaibigan ko ay]/.test(text.toLowerCase()); // Simple Tagalog detection
+        
+        // Voice priorities by language
+        const voicePriorities = {
+          english: [
+            'Microsoft Zira Desktop - English (United States)',
+            'Google US English',
+            'Samantha',
+            'English'
+          ],
+          tagalog: [
+            'Google Filipino',
+            'Microsoft Haruka Desktop - Japanese', // Some Japanese voices work okay for Tagalog
+            'Filipino'
+          ],
+          default: []
+        };
+        
+        // Select voice based on detected language
+        let preferredVoice;
+        if (isEnglish) {
+          preferredVoice = voices.find(voice => 
+            voicePriorities.english.some(name => voice.name.includes(name))
+          );
+        } else if (isTagalog) {
+          preferredVoice = voices.find(voice => 
+            voicePriorities.tagalog.some(name => voice.name.includes(name))
+          );
+        }
+        
+        // Fallback to any available voice
+        if (!preferredVoice) {
+          preferredVoice = voices.find(voice => 
+            !voice.name.includes('Microsoft David') // Avoid deep male voices
+          ) || voices[0];
+        }
+        
+        if (preferredVoice) {
+          utterance.voice = preferredVoice;
+          // Adjust rate for different languages if needed
+          if (isTagalog) {
+            utterance.rate = 0.9; // Slightly slower for Tagalog
+          }
+        }
+        
+        // Update speaking state
+        utterance.onstart = () => {
+          this.isSpeaking = true;
+        };
+        
+        utterance.onend = utterance.onerror = () => {
+          this.isSpeaking = false;
+        };
+        
+        // Speak the text
+        window.speechSynthesis.speak(utterance);
+      } else {
+        alert("Text-to-speech is not supported in your browser. Try Chrome or Edge.");
+      }
+    },
     toggleMessageMenu(index) {
       // Disabled functionality
     },
@@ -760,7 +956,7 @@ export default {
       this.showInfoModal = !this.showInfoModal;
     },
     showVoiceWIP() {
-      this.showVoiceModal = true;
+      this.toggleVoiceInput(); // Now using the proper voice input method
     },
     hideEmojiPicker() {
       this.showEmojiPicker = false;
@@ -775,11 +971,66 @@ export default {
   },
   beforeDestroy() {
     if (this.authListener) this.authListener();
+    // Cancel any ongoing speech when component is destroyed
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+    }
+    // Stop voice recognition if active
+    if (this.isListening && this.recognition) {
+      this.recognition.stop();
+    }
   }
 };
 </script>
 
 <style scoped>
+
+.voice-btn {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.voice-btn.active {
+  color: #ff4757;
+  animation: pulse 1.5s infinite;
+}
+
+.voice-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.tooltip {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #333;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+
+.voice-btn:disabled:hover .tooltip {
+  opacity: 1;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
 /* Modern Chat UI Styles */
 .neura-chat-container {
   --primary: #6C5CE7; /* Pleasant purple */
