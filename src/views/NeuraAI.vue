@@ -697,7 +697,7 @@ export default {
             message: userInput,
             chat_history: chatHistory,
             temperature: 0.7,
-            max_tokens: this.responseStyle === 'detailed' ? 500 : 300,
+            max_tokens: this.responseStyle === 'detailed' ? 4096 : 2048,
             preamble: enhancedPrompt,
             connectors: [{ "id": "web-search" }]
           }),
@@ -714,9 +714,10 @@ export default {
           .replace(/[*#_>`~]/g, '')             // Strip markdown
           .replace(/<co:[^>]*>/g, '')           // Remove Cohere internal tags
           .replace(/<\/?[^>]+(>|$)/g, '')       // Strip any stray HTML tags
+          .replace(/[\r]+/g, '')                // Remove carriage returns
           .replace(/\n{3,}/g, '\n\n')           // Normalize excessive newlines
           .trim();
-
+          
         // Add punctuation only if completely missing at end
         const lastChar = cleanText.charAt(cleanText.length - 1);
         if (!['.', '!', '?', '"', "'", ':'].includes(lastChar)) {
@@ -804,7 +805,7 @@ export default {
             message: this.messages[userMessageIndex].text,
             chat_history: chatHistory,
             temperature: 0.7,
-            max_tokens: this.responseStyle === 'detailed' ? 500 : 300,
+            max_tokens: this.responseStyle === 'detailed' ? 4096 : 2048,
             preamble: enhancedPrompt,
             connectors: [{ "id": "web-search" }]
           }),
